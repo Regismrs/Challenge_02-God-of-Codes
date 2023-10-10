@@ -1,14 +1,18 @@
 package com.compassuol.sp.challenge.msproducts.services;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.compassuol.sp.challenge.msproducts.models.entities.Product;
+import com.compassuol.sp.challenge.msproducts.repositories.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
+@Service
 public class ProductService {
 
-    //@Autowired
-    //private ProductRepository productRepository;
+    @Autowired
+    private ProductRepository productRepository;
 
-    public List<Object> getAll() {
-        //return List<Object> products = productRepository.findAll();
+    public List<Product> getAll() {
+        return productRepository.findAll();
     }
 }
