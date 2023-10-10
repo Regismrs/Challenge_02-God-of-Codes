@@ -1,7 +1,9 @@
 package com.compassuol.sp.challenge.msproducts.controllers;
 
+import com.compassuol.sp.challenge.msproducts.models.entities.Product;
 import com.compassuol.sp.challenge.msproducts.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,9 +20,10 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public ResponseEntity<List<Object>> getAll() {
-        List<Object> products = productService.getAll();
-        return ResponseEntity.ok(products);
+    public ResponseEntity<List<Product>> getAll() {
+        List<Product> products = productService.getAll();
+
+        return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 
 }
