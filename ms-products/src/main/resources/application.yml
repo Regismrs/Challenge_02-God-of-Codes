@@ -1,0 +1,9 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: ms-products
+  datasource:
+    url: jdbc:mysql://localhost:3306/db_ecommerce?createDatabaseIfNotExist=true&useTimezone=true&serverTimezone=UTC
+    username: root
+    password: root
