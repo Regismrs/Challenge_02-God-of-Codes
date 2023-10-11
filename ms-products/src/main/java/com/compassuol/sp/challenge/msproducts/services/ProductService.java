@@ -32,6 +32,12 @@ public class ProductService {
         return ProductMapper.toDto(productSaved);
     }
 
+    public void deleteProduct(Long id){
+        Product product = productRepository.findById(id).orElseThrow(()
+                -> new NotFound("Product not found"));
+        productRepository.delete(product);
+    }
+
     @Transactional
     public ProductResponseDto updateProduct(Long id, ProductRequestDto productDto) {
         Product productToUpdate = productRepository.findById(id).orElseThrow(() -> new NotFound("Product not found"));
