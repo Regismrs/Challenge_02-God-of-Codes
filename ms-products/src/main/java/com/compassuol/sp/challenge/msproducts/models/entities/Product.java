@@ -6,10 +6,13 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 
@@ -37,9 +40,16 @@ public class Product implements Serializable {
     private String description;
 
     @Column(nullable = false)
-    @NotNull
     @Positive
     private BigDecimal value;
+
+    @CreationTimestamp
+    @Column(name="create_date_time", updatable = false)
+    private LocalDateTime createDateTime;
+
+    @UpdateTimestamp
+    @Column(name="update_date_time")
+    private LocalDateTime updateDateTime;
 
     @Override
     public final boolean equals(Object o) {
