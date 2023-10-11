@@ -38,8 +38,8 @@ public class ProductService {
     }
 
     public ProductResponseDto findById(Long id){
-        Product product = productRepository.findById(id).get();
-        return ProductMapper.toProductResponse(product);
+        Product product = productRepository.findById(id).orElseThrow(() -> new NotFound("Product not found"));
+        return ProductMapper.toDto(product);
     }
 }
 

@@ -1,6 +1,8 @@
 package com.compassuol.sp.challenge.msproducts.controllers;
 
-import com.compassuol.sp.challenge.msproducts.dtos.ProductResponseDto;
+
+import com.compassuol.sp.challenge.msproducts.models.dtos.ProductRequestDto;
+import com.compassuol.sp.challenge.msproducts.models.dtos.ProductResponseDto;
 import com.compassuol.sp.challenge.msproducts.services.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
