@@ -1,5 +1,6 @@
 package com.compassuol.sp.challenge.msproducts.services;
 
+import com.compassuol.sp.challenge.msproducts.exceptions.NotFound;
 import com.compassuol.sp.challenge.msproducts.models.dtos.ProductRequestDto;
 import com.compassuol.sp.challenge.msproducts.models.dtos.ProductResponseDto;
 import com.compassuol.sp.challenge.msproducts.mapper.ProductMapper;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
 public class ProductService {
 
@@ -27,5 +29,16 @@ public class ProductService {
         Product productSaved = productRepository.save(product);
 
         return ProductMapper.toDto(productSaved);
+    }
+
+    public ProductResponseDto updateProduct(Long id, ProductRequestDto productDto) {
+        Product productToUpdate = productRepository.findById(id).orElseThrow(() -> new NotFound("Product not found"));
+        productToUpdate.setName(productDto.getName());
+        productToUpdate.setDescription(productDto.getDescription());
+        productToUpdate.setValue(productDto.getValue());
+        Product productUpdated = productRepository.save(productToUpdate);
+
+        return ProductMapper.toDto(productUpdated);
+
     }
 }
