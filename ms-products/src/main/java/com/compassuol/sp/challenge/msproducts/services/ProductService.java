@@ -25,6 +25,7 @@ public class ProductService {
         return productResponseDtos;
     }
 
+    @Transactional
     public ProductResponseDto saveProduct(ProductRequestDto productDto) {
         Product product = ProductMapper.toModel(productDto);
         Product productSaved = productRepository.save(product);
