@@ -24,5 +24,4 @@ public class ProductController {
 
         return ResponseEntity.status(HttpStatus.OK).body(products);
     }
-
 }
