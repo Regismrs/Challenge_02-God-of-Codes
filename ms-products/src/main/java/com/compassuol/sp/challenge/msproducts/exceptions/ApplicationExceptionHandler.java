@@ -1,12 +1,11 @@
 package com.compassuol.sp.challenge.msproducts.exceptions;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,7 +21,7 @@ public class ApplicationExceptionHandler {
         e.getBindingResult().getFieldErrors().stream().map(
                 error -> new FieldError(error.getField(), error.getDefaultMessage())
         ).collect(Collectors.toList());
-        
+
         ExceptionsResponse exceptionResponse = new ExceptionsResponse(
                 400,
                 "Bad Request",
@@ -33,8 +32,8 @@ public class ApplicationExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
-    public ExceptionsResponse handleSQLExceptionsBadRequest(SQLIntegrityConstraintViolationException e){
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ExceptionsResponse handleSQLExceptionsBadRequest(DataIntegrityViolationException e){
         ExceptionsResponse exceptionsResponse = new ExceptionsResponse(
                 400,
                 "Bad Request",
@@ -62,8 +61,8 @@ public class ApplicationExceptionHandler {
 
         ExceptionsResponse exceptionsResponse = new ExceptionsResponse(
                 500,
-                "Internal Server Eror",
-                "Ocorreu um erro inesperado",
+                "Internal Server Error",
+                "Unexpected Error",
                 new ArrayList<>()
         );
         return exceptionsResponse;
