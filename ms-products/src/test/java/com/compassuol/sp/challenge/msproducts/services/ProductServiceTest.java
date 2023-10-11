@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.internal.matchers.Any;
 import org.mockito.junit.jupiter.MockitoExtension;
 // constants
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -62,14 +63,17 @@ class ProductServiceTest {
 
     @Test
     void createProductWithValidDataReturnProduct() {
-        when(productRepository.save(any(Product.class))).thenReturn(PRODUCT);
+        ProductResponseDto expected =
+                new ProductResponseDto(1L, "Produto 1", "Description product 1", BigDecimal.valueOf(1.11));
+
+        when(productRepository.save(any(Product.class))).thenReturn(PRODUCT_WITH_ID);
 
         ProductResponseDto sut = productService.saveProduct(PRODUCT_REQ_DTO);
 
         assertThat(sut).isInstanceOf(ProductResponseDto.class);
         assertThat(sut)
                 .usingRecursiveComparison()
-                .isEqualTo(PRODUCT);
+                .isEqualTo(expected);
     }
 
     @Test
