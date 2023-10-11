@@ -1,6 +1,7 @@
 package com.compassuol.sp.challenge.msproducts.models.dtos;
 
 import jakarta.validation.constraints.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,14 +15,14 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class ProductRequestDto {
 
-    @NotBlank
+    @NotBlank(message = "field can't be blank")
     private String name;
 
-    @NotBlank
-    @Size(min = 10)
+    @NotBlank(message = "field can't be blank")
+    @Size(min = 10, message = "field should be at least 10 chars")
     private String description;
 
-    @NotBlank
-    @Positive
+    @NotNull(message = "field can't be null")
+    @Positive(message = "field can't be negative number")
     private BigDecimal value;
 }
