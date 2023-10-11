@@ -4,7 +4,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class ApplicationExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(value = MethodArgumentNotValidException.class)
+    @ExceptionHandler({MethodArgumentNotValidException.class, MethodArgumentTypeMismatchException.class})
     public ExceptionsResponseWithDetails handleExceptionsBadRequest(MethodArgumentNotValidException e){
 
         List<FieldError> details =
@@ -30,7 +30,7 @@ public class ApplicationExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(value = NotFound.class)
+    @ExceptionHandler(NotFound.class)
     public ExceptionsResponse handleExceptionNotFound(NotFound e){
         ExceptionsResponse exceptionsResponse = new ExceptionsResponse(
                 404,
@@ -41,8 +41,8 @@ public class ApplicationExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(RuntimeException.class)
-    public ExceptionsResponse handleAllException(RuntimeException e){
+    @ExceptionHandler(Exception.class)
+    public ExceptionsResponse handleAllException(Exception e){
 
         ExceptionsResponse exceptionsResponse = new ExceptionsResponse(
                 500,
