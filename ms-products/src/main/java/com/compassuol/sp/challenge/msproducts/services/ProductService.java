@@ -6,6 +6,7 @@ import com.compassuol.sp.challenge.msproducts.models.dtos.ProductResponseDto;
 import com.compassuol.sp.challenge.msproducts.mapper.ProductMapper;
 import com.compassuol.sp.challenge.msproducts.models.entities.Product;
 import com.compassuol.sp.challenge.msproducts.repositories.ProductRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,7 @@ public class ProductService {
         return ProductMapper.toDto(productSaved);
     }
 
+    @Transactional
     public ProductResponseDto updateProduct(Long id, ProductRequestDto productDto) {
         Product productToUpdate = productRepository.findById(id).orElseThrow(() -> new NotFound("Product not found"));
         productToUpdate.setName(productDto.getName());
