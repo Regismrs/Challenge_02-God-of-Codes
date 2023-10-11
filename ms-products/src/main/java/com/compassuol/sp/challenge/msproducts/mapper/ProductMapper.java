@@ -28,7 +28,7 @@ public class ProductMapper {
             return productResponseDto;
         }
 
-        public static List<ProductResponseDto> toProductListDto(List<Product> productList){
+        public static List<ProductResponseDto> toProductListDtos(List<Product> productList){
             List<ProductResponseDto> productResponseDtos = new ArrayList<>();
             for (Product product : productList){
                 productResponseDtos.add(toProductResponse(product));
