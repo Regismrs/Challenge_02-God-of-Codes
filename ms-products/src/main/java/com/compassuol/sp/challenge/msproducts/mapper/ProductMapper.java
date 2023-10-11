@@ -1,7 +1,7 @@
 package com.compassuol.sp.challenge.msproducts.mapper;
 
-import com.compassuol.sp.challenge.msproducts.dtos.ProductRequestDto;
-import com.compassuol.sp.challenge.msproducts.dtos.ProductResponseDto;
+import com.compassuol.sp.challenge.msproducts.models.dtos.ProductRequestDto;
+import com.compassuol.sp.challenge.msproducts.models.dtos.ProductResponseDto;
 import com.compassuol.sp.challenge.msproducts.models.entities.Product;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +11,7 @@ import java.util.List;
 @Component
 public class ProductMapper {
 
-        public static Product toProductRequest(ProductRequestDto createProductDto){
+        public static Product toModel(ProductRequestDto createProductDto){
             Product product = new Product();
             product.setName(createProductDto.getName());
             product.setDescription(createProductDto.getDescription());
@@ -19,7 +19,7 @@ public class ProductMapper {
             return product;
         }
 
-        public static ProductResponseDto toProductResponse(Product product){
+        public static ProductResponseDto toDto(Product product){
             ProductResponseDto productResponseDto = new ProductResponseDto();
             productResponseDto.setId(product.getId());
             productResponseDto.setName(product.getName());
@@ -28,10 +28,10 @@ public class ProductMapper {
             return productResponseDto;
         }
 
-        public static List<ProductResponseDto> toProductListDtos(List<Product> productList){
+        public static List<ProductResponseDto> toListDto(List<Product> productList){
             List<ProductResponseDto> productResponseDtos = new ArrayList<>();
             for (Product product : productList){
-                productResponseDtos.add(toProductResponse(product));
+                productResponseDtos.add(toDto(product));
             }
             return productResponseDtos;
         }

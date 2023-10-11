@@ -1,4 +1,4 @@
-package com.compassuol.sp.challenge.msproducts.dtos;
+package com.compassuol.sp.challenge.msproducts.models.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

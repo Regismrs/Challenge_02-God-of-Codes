@@ -1,10 +1,12 @@
 package com.compassuol.sp.challenge.msproducts.exceptions;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,21 +14,33 @@ import java.util.stream.Collectors;
 public class ApplicationExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({MethodArgumentNotValidException.class, MethodArgumentTypeMismatchException.class})
-    public ExceptionsResponseWithDetails handleExceptionsBadRequest(MethodArgumentNotValidException e){
+    @ExceptionHandler({MethodArgumentNotValidException.class})
+    public ExceptionsResponse handleExceptionsBadRequest(MethodArgumentNotValidException e){
 
         List<FieldError> details =
         e.getBindingResult().getFieldErrors().stream().map(
                 error -> new FieldError(error.getField(), error.getDefaultMessage())
         ).collect(Collectors.toList());
-        
-        ExceptionsResponseWithDetails exceptionResponseWithDetails = new ExceptionsResponseWithDetails(
+
+        ExceptionsResponse exceptionResponse = new ExceptionsResponse(
                 400,
                 "Bad Request",
-                e.getMessage(),
+                "Invalid request",
                 details
         );
-        return exceptionResponseWithDetails;
+        return exceptionResponse;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ExceptionsResponse handleSQLExceptionsBadRequest(DataIntegrityViolationException e){
+        ExceptionsResponse exceptionsResponse = new ExceptionsResponse(
+                400,
+                "Bad Request",
+                "Product name need be an unique value",
+                new ArrayList<>()
+        );
+        return exceptionsResponse;
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -35,7 +49,8 @@ public class ApplicationExceptionHandler {
         ExceptionsResponse exceptionsResponse = new ExceptionsResponse(
                 404,
                 "Not Found",
-                e.getMessage()
+                e.getMessage(),
+                new ArrayList<>()
         );
         return exceptionsResponse;
     }
@@ -46,13 +61,14 @@ public class ApplicationExceptionHandler {
 
         ExceptionsResponse exceptionsResponse = new ExceptionsResponse(
                 500,
-                "Internal Server Eror",
-                "Ocorreu um erro inesperado"
+                "Internal Server Error",
+                "Unexpected Error",
+                new ArrayList<>()
         );
         return exceptionsResponse;
     }
 }
 
 record FieldError(String field, String message){}
-record ExceptionsResponseWithDetails(int code, String Status, String message, Object details){}
-record ExceptionsResponse(int code,String Status, String message){}
+record ExceptionsResponse(int code, String Status, String message, Object details){}
+
