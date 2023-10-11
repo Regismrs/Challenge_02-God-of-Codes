@@ -4,7 +4,6 @@ import com.compassuol.sp.challenge.msproducts.dtos.ProductResponseDto;
 import com.compassuol.sp.challenge.msproducts.mapper.ProductMapper;
 import com.compassuol.sp.challenge.msproducts.models.entities.Product;
 import com.compassuol.sp.challenge.msproducts.repositories.ProductRepository;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
