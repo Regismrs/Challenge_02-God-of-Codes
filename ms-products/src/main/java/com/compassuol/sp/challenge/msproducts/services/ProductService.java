@@ -1,6 +1,7 @@
 package com.compassuol.sp.challenge.msproducts.services;
 
-import com.compassuol.sp.challenge.msproducts.dtos.ProductResponseDto;
+import com.compassuol.sp.challenge.msproducts.models.dtos.ProductRequestDto;
+import com.compassuol.sp.challenge.msproducts.models.dtos.ProductResponseDto;
 import com.compassuol.sp.challenge.msproducts.mapper.ProductMapper;
 import com.compassuol.sp.challenge.msproducts.models.entities.Product;
 import com.compassuol.sp.challenge.msproducts.repositories.ProductRepository;
@@ -16,7 +17,15 @@ public class ProductService {
 
     public List<ProductResponseDto> getAll(){
         List<Product> products = productRepository.findAll();
-        List<ProductResponseDto> productResponseDtos = ProductMapper.toProductListDto(products);
+        List<ProductResponseDto> productResponseDtos = ProductMapper.toListDto(products);
+
         return productResponseDtos;
+    }
+
+    public ProductResponseDto saveProduct(ProductRequestDto productDto) {
+        Product product = ProductMapper.toModel(productDto);
+        Product productSaved = productRepository.save(product);
+
+        return ProductMapper.toDto(productSaved);
     }
 }
