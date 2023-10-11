@@ -9,6 +9,7 @@ import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 
@@ -38,7 +39,7 @@ public class Product implements Serializable {
     @Column(nullable = false)
     @NotNull
     @Positive
-    private Long value;
+    private BigDecimal value;
 
     @Override
     public final boolean equals(Object o) {
