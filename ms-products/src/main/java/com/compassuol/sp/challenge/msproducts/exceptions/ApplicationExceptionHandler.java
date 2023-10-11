@@ -9,28 +9,28 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
-public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler {
+public class ApplicationExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(value = {MethodArgumentNotValidException.class})
-    public ExceptionResposeWithDetails handleExceptionsBadRequest(MethodArgumentNotValidException e){
+    @ExceptionHandler(value = MethodArgumentNotValidException.class)
+    public ExceptionsResponseWithDetails handleExceptionsBadRequest(MethodArgumentNotValidException e){
 
         List<FieldError> details =
         e.getBindingResult().getFieldErrors().stream().map(
                 error -> new FieldError(error.getField(), error.getDefaultMessage())
         ).collect(Collectors.toList());
         
-        ExceptionResposeWithDetails exceptionResposeWithDetails = new ExceptionResposeWithDetails(
+        ExceptionsResponseWithDetails exceptionResponseWithDetails = new ExceptionsResponseWithDetails(
                 400,
                 "Bad Request",
                 e.getMessage(),
                 details
         );
-        return exceptionResposeWithDetails;
+        return exceptionResponseWithDetails;
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(value = {NotFound.class})
+    @ExceptionHandler(value = NotFound.class)
     public ExceptionsResponse handleExceptionNotFound(NotFound e){
         ExceptionsResponse exceptionsResponse = new ExceptionsResponse(
                 404,
@@ -41,8 +41,8 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(value = {Exception.class})
-    public ExceptionsResponse handleAllException(Exception e){
+    @ExceptionHandler(RuntimeException.class)
+    public ExceptionsResponse handleAllException(RuntimeException e){
 
         ExceptionsResponse exceptionsResponse = new ExceptionsResponse(
                 500,
@@ -54,5 +54,5 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 }
 
 record FieldError(String field, String message){}
-record ExceptionResposeWithDetails(int code, String Status, String message, Object details){}
+record ExceptionsResponseWithDetails(int code, String Status, String message, Object details){}
 record ExceptionsResponse(int code,String Status, String message){}
