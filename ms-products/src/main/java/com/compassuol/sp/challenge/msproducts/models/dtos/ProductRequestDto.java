@@ -1,9 +1,6 @@
-package com.compassuol.sp.challenge.msproducts.dtos;
+package com.compassuol.sp.challenge.msproducts.models.dtos;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +18,7 @@ public class ProductRequestDto {
     private String name;
 
     @NotBlank
+    @Size(min = 10)
     private String description;
 
     @NotBlank

@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class ApplicationExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({MethodArgumentNotValidException.class, MethodArgumentTypeMismatchException.class})
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     public ExceptionsResponseWithDetails handleExceptionsBadRequest(MethodArgumentNotValidException e){
 
         List<FieldError> details =
