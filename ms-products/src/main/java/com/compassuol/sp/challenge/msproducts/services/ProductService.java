@@ -49,5 +49,11 @@ public class ProductService {
 
         return ProductMapper.toDto(productUpdated);
 
+
+    public ProductResponseDto findById(Long id){
+        Product product = productRepository.findById(id).orElseThrow(() -> new NotFound("Product not found"));
+        return ProductMapper.toDto(product);
+
     }
 }
+
