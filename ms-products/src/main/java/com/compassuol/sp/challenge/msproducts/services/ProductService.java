@@ -41,19 +41,22 @@ public class ProductService {
 
     @Transactional
     public ProductResponseDto updateProduct(Long id, ProductRequestDto productDto) {
-        Product productToUpdate = productRepository.findById(id).orElseThrow(() -> new NotFound("Product not found"));
+        Product productToUpdate = productRepository.findById(id)
+                .orElseThrow(() -> new NotFound("Product not found"));
+
         productToUpdate.setName(productDto.getName());
         productToUpdate.setDescription(productDto.getDescription());
         productToUpdate.setValue(productDto.getValue());
         Product productUpdated = productRepository.save(productToUpdate);
 
         return ProductMapper.toDto(productUpdated);
+    }
 
+    public ProductResponseDto findById(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
 
-    public ProductResponseDto findById(Long id){
-        Product product = productRepository.findById(id).orElseThrow(() -> new NotFound("Product not found"));
         return ProductMapper.toDto(product);
-
     }
 }
 

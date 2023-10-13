@@ -19,7 +19,6 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
 @Entity
 @Table(name = "products_tb")
 public class Product implements Serializable {
@@ -28,7 +27,7 @@ public class Product implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     @Column(nullable = false, unique = true)
     @NotEmpty
@@ -50,6 +49,21 @@ public class Product implements Serializable {
     @UpdateTimestamp
     @Column(name="update_date_time")
     private LocalDateTime updateDateTime;
+
+    public Product() { }
+
+    public Product(String name, String description, BigDecimal value) {
+        this.name = name;
+        this.description = description;
+        this.value = value;
+    }
+
+    public Product(Long id, String name, String description, BigDecimal value) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.value = value;
+    }
 
     @Override
     public final boolean equals(Object o) {

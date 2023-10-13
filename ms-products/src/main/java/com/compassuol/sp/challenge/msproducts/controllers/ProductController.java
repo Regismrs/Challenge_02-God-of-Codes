@@ -35,20 +35,20 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductResponseDto> updateProduct(@Valid @PathVariable(value = "id") Long id,
+    public ResponseEntity<ProductResponseDto> updateProduct(@PathVariable("id") Long id,
                                             @RequestBody ProductRequestDto productDto) {
         return ResponseEntity.status(HttpStatus.OK).body(productService.updateProduct(id, productDto));
     }
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> delete(@PathVariable Long id){
+    public ResponseEntity<Object> delete(@PathVariable("id") Long id){
         productService.deleteProduct(id);
         return ResponseEntity.status(HttpStatus.OK).body("Product delected sucessfully");
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ProductResponseDto> getProduct(@PathVariable(name = "id") Long Id) {
-        return ResponseEntity.status(HttpStatus.OK).body(productService.findById(Id));
+    public ResponseEntity<ProductResponseDto> getProduct(@PathVariable("id") Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(productService.findById(id));
     }
 }
