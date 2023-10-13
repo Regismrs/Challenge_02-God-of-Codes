@@ -54,7 +54,7 @@ public class ProductService {
 
     public ProductResponseDto findById(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new NotFound("Product not found"));
 
         return ProductMapper.toDto(product);
     }
