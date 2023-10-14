@@ -10,6 +10,8 @@ import java.util.List;
 
 public class ProductConstants {
     public static final Product INVALID_PRODUCT = new Product();
+
+    public static final Product EMPTY_PRODUCT = new Product("", "", null);
     public static final Product PRODUCT =
             new Product(
                     "Produto 1", "Description product 1", BigDecimal.valueOf(1.11));
