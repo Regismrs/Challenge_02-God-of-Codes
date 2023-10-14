@@ -59,7 +59,7 @@ class ProductControllerTest {
     }
 
     @Test
-    void createProductWithInvalidDataReturnProduct() {
+    void createProductWithInvalidDataThrowException() {
         when(productService.saveProduct(PRODUCT_REQ_DTO)).thenThrow(RuntimeException.class);
 
         assertThatThrownBy(
