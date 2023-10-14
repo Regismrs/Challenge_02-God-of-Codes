@@ -1,8 +1,8 @@
 package com.compassuol.sp.challenge.msproducts.commom;
 
-import com.compassuol.sp.challenge.msproducts.models.dtos.ProductRequestDto;
-import com.compassuol.sp.challenge.msproducts.models.dtos.ProductResponseDto;
-import com.compassuol.sp.challenge.msproducts.models.entities.Product;
+import com.compassuol.sp.challenge.msproducts.domain.dto.ProductRequestDTO;
+import com.compassuol.sp.challenge.msproducts.domain.dto.ProductResponseDTO;
+import com.compassuol.sp.challenge.msproducts.domain.entities.Product;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -18,17 +18,17 @@ public class ProductConstants {
             new Product(
                     1L, "Produto 1", "Description product 1", BigDecimal.valueOf(1.11));
 
-    public static final ProductRequestDto PRODUCT_REQ_DTO =
-            new ProductRequestDto(
+    public static final ProductRequestDTO PRODUCT_REQ_DTO =
+            new ProductRequestDTO(
                     "Produto 1", "Description product 1", BigDecimal.valueOf(1.11));
-    public static final ProductResponseDto PRODUCT_RES_DTO1 =
-            new ProductResponseDto(
+    public static final ProductResponseDTO PRODUCT_RES_DTO1 =
+            new ProductResponseDTO(
                     1L, "Produto 1", "description produto 1", BigDecimal.valueOf(1.11));
-    public static final ProductResponseDto PRODUCT_RES_DTO2 =
-            new ProductResponseDto(
+    public static final ProductResponseDTO PRODUCT_RES_DTO2 =
+            new ProductResponseDTO(
                     2L, "Produto 2", "description produto 2", BigDecimal.valueOf(2.22));
 
 
-    public static final List<ProductResponseDto> PRODUCT_LIST =
+    public static final List<ProductResponseDTO> PRODUCT_LIST =
             Arrays.asList(PRODUCT_RES_DTO1, PRODUCT_RES_DTO2);
 }

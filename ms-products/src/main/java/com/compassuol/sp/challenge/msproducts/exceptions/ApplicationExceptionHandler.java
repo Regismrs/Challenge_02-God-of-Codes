@@ -1,71 +1,70 @@
 package com.compassuol.sp.challenge.msproducts.exceptions;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class ApplicationExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ExceptionsResponse handleExceptionsBadRequest(MethodArgumentNotValidException e){
+    @ExceptionHandler({ConstraintViolationException.class})
+    public ExceptionsResponse handleExceptionsBadRequest(ConstraintViolationException e){
 
-        List<FieldError> details =
-        e.getBindingResult().getFieldErrors().stream().map(
-                error -> new FieldError(error.getField(), error.getDefaultMessage())
-        ).collect(Collectors.toList());
+        List<FieldError> details = new ArrayList<>();
 
-        ExceptionsResponse exceptionResponse = new ExceptionsResponse(
+        for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
+            String field = violation.getPropertyPath().toString();
+            String message = violation.getMessage();
+            details.add(new FieldError(field, message));
+        }
+
+        return new ExceptionsResponse(
                 400,
                 "Bad Request",
                 "Invalid request",
                 details
         );
-        return exceptionResponse;
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ExceptionsResponse handleSQLExceptionsBadRequest(DataIntegrityViolationException e){
-        ExceptionsResponse exceptionsResponse = new ExceptionsResponse(
+    public ExceptionsResponse handleSQLExceptionsBadRequest(){
+        return new ExceptionsResponse(
                 400,
                 "Bad Request",
-                "Product name need be an unique value",
+                "product name need to be an unique value",
                 new ArrayList<>()
         );
-        return exceptionsResponse;
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFound.class)
     public ExceptionsResponse handleExceptionNotFound(NotFound e){
-        ExceptionsResponse exceptionsResponse = new ExceptionsResponse(
+        return new ExceptionsResponse(
                 404,
                 "Not Found",
                 e.getMessage(),
                 new ArrayList<>()
         );
-        return exceptionsResponse;
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
-    public ExceptionsResponse handleAllException(Exception e){
+    public ExceptionsResponse handleAllException(){
 
-        ExceptionsResponse exceptionsResponse = new ExceptionsResponse(
+        return new ExceptionsResponse(
                 500,
                 "Internal Server Error",
                 "Unexpected Error",
                 new ArrayList<>()
         );
-        return exceptionsResponse;
     }
 }
 

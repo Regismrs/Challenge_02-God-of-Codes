@@ -1,6 +1,6 @@
 package com.compassuol.sp.challenge.msproducts.repositories;
 
-import com.compassuol.sp.challenge.msproducts.models.entities.Product;
+import com.compassuol.sp.challenge.msproducts.domain.entities.Product;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

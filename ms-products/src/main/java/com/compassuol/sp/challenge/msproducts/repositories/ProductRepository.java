@@ -1,9 +1,7 @@
 package com.compassuol.sp.challenge.msproducts.repositories;
 
-import com.compassuol.sp.challenge.msproducts.models.entities.Product;
+import com.compassuol.sp.challenge.msproducts.domain.entities.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 }

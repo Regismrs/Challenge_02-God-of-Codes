@@ -1,13 +1,12 @@
 package com.compassuol.sp.challenge.msproducts.services;
 
-import com.compassuol.sp.challenge.msproducts.models.dtos.ProductResponseDto;
-import com.compassuol.sp.challenge.msproducts.models.entities.Product;
+import com.compassuol.sp.challenge.msproducts.domain.dto.ProductResponseDTO;
+import com.compassuol.sp.challenge.msproducts.domain.entities.Product;
 import com.compassuol.sp.challenge.msproducts.repositories.ProductRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.internal.matchers.Any;
 import org.mockito.junit.jupiter.MockitoExtension;
 // constants
 import java.math.BigDecimal;
@@ -21,8 +20,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @ExtendWith(MockitoExtension.class)
 class ProductServiceTest {
 
@@ -35,7 +32,7 @@ class ProductServiceTest {
     void getProductsReturnsEmptyList() {
         when(productRepository.findAll()).thenReturn(Collections.emptyList());
 
-        List<ProductResponseDto> sut = productService.getAll();
+        List<ProductResponseDTO> sut = productService.getAll();
 
         assertThat(sut).isEmpty();
     }
@@ -48,13 +45,13 @@ class ProductServiceTest {
             }
         };
         when(productRepository.findAll()).thenReturn(products);
-        List<ProductResponseDto> sut = productService.getAll();
+        List<ProductResponseDTO> sut = productService.getAll();
 
         assertThat(sut).isNotEmpty();
         assertThat(sut).hasSize(1);
 
         // comparacao campo a campo pq product <> productResponseDto
-        assertThat(sut.get(0)).isInstanceOf(ProductResponseDto.class);
+        assertThat(sut.get(0)).isInstanceOf(ProductResponseDTO.class);
         assertThat(sut.get(0))
                 .usingRecursiveComparison()
                 .isEqualTo(PRODUCT_WITH_ID);
@@ -63,14 +60,14 @@ class ProductServiceTest {
 
     @Test
     void createProductWithValidDataReturnProduct() {
-        ProductResponseDto expected =
-                new ProductResponseDto(1L, "Produto 1", "Description product 1", BigDecimal.valueOf(1.11));
+        ProductResponseDTO expected =
+                new ProductResponseDTO(1L, "Produto 1", "Description product 1", BigDecimal.valueOf(1.11));
 
         when(productRepository.save(any(Product.class))).thenReturn(PRODUCT_WITH_ID);
 
-        ProductResponseDto sut = productService.saveProduct(PRODUCT_REQ_DTO);
+        ProductResponseDTO sut = productService.saveProduct(PRODUCT_REQ_DTO);
 
-        assertThat(sut).isInstanceOf(ProductResponseDto.class);
+        assertThat(sut).isInstanceOf(ProductResponseDTO.class);
         assertThat(sut)
                 .usingRecursiveComparison()
                 .isEqualTo(expected);

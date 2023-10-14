@@ -1,10 +1,7 @@
-package com.compassuol.sp.challenge.msproducts.models.entities;
+package com.compassuol.sp.challenge.msproducts.domain.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -30,16 +27,17 @@ public class Product implements Serializable {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    @NotEmpty
+    @NotBlank(message = "field can't be blank")
     private String name;
 
     @Column(nullable = false)
-    @Size(min = 10)
-    @NotEmpty
+    @NotBlank(message = "field can't be blank")
+    @Size(min = 10, message = "field should be at least 10 chars")
     private String description;
 
     @Column(nullable = false)
-    @Positive
+    @NotNull(message = "field can't be null")
+    @Positive(message = "field can't be negative number")
     private BigDecimal value;
 
     @CreationTimestamp

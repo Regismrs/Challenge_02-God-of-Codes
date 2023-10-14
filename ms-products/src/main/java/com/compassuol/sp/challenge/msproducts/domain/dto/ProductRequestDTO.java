@@ -1,4 +1,5 @@
-package com.compassuol.sp.challenge.msproducts.models.dtos;
+package com.compassuol.sp.challenge.msproducts.domain.dto;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,14 +12,8 @@ import java.math.BigDecimal;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductResponseDto {
-
-    private Long id;
-
+public class ProductRequestDTO {
     private String name;
-
     private String description;
-
     private BigDecimal value;
-
 }

@@ -1,10 +1,9 @@
 package com.compassuol.sp.challenge.msproducts.controllers;
 
 
-import com.compassuol.sp.challenge.msproducts.models.dtos.ProductRequestDto;
-import com.compassuol.sp.challenge.msproducts.models.dtos.ProductResponseDto;
+import com.compassuol.sp.challenge.msproducts.domain.dto.ProductRequestDTO;
+import com.compassuol.sp.challenge.msproducts.domain.dto.ProductResponseDTO;
 import com.compassuol.sp.challenge.msproducts.services.ProductService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,19 +23,19 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public ResponseEntity<List<ProductResponseDto>> getAll() {
+    public ResponseEntity<List<ProductResponseDTO>> getAll() {
         return ResponseEntity.status(HttpStatus.OK).body(productService.getAll());
     }
 
     @PostMapping
-    public ResponseEntity<ProductResponseDto> createProduct(@Valid @RequestBody ProductRequestDto productDto) {
+    public ResponseEntity<ProductResponseDTO> createProduct(@RequestBody ProductRequestDTO productDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(productService.saveProduct(productDto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductResponseDto> updateProduct(@PathVariable("id") Long id,
-                                            @RequestBody ProductRequestDto productDto) {
+    public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable("id") Long id,
+                                                            @RequestBody ProductRequestDTO productDto) {
         return ResponseEntity.status(HttpStatus.OK).body(productService.updateProduct(id, productDto));
     }
 
@@ -48,7 +47,7 @@ public class ProductController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ProductResponseDto> getProduct(@PathVariable("id") Long id) {
+    public ResponseEntity<ProductResponseDTO> getProduct(@PathVariable("id") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(productService.findById(id));
     }
 }

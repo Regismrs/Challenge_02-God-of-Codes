@@ -1,8 +1,8 @@
 package com.compassuol.sp.challenge.msproducts.mapper;
 
-import com.compassuol.sp.challenge.msproducts.models.dtos.ProductRequestDto;
-import com.compassuol.sp.challenge.msproducts.models.dtos.ProductResponseDto;
-import com.compassuol.sp.challenge.msproducts.models.entities.Product;
+import com.compassuol.sp.challenge.msproducts.domain.dto.ProductRequestDTO;
+import com.compassuol.sp.challenge.msproducts.domain.dto.ProductResponseDTO;
+import com.compassuol.sp.challenge.msproducts.domain.entities.Product;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -11,28 +11,36 @@ import java.util.List;
 @Component
 public class ProductMapper {
 
-        public static Product toModel(ProductRequestDto createProductDto){
+        public static Product toModel(ProductRequestDTO createProductDTO){
             Product product = new Product();
-            product.setName(createProductDto.getName());
-            product.setDescription(createProductDto.getDescription());
-            product.setValue(createProductDto.getValue());
+            product.setName(createProductDTO.getName());
+            product.setDescription(createProductDTO.getDescription());
+            product.setValue(createProductDTO.getValue());
             return product;
         }
 
-        public static ProductResponseDto toDto(Product product){
-            ProductResponseDto productResponseDto = new ProductResponseDto();
-            productResponseDto.setId(product.getId());
-            productResponseDto.setName(product.getName());
-            productResponseDto.setDescription(product.getDescription());
-            productResponseDto.setValue(product.getValue());
-            return productResponseDto;
+        public static ProductResponseDTO toDTO(Product product){
+            ProductResponseDTO productResponseDTO = new ProductResponseDTO();
+            productResponseDTO.setId(product.getId());
+            productResponseDTO.setName(product.getName());
+            productResponseDTO.setDescription(product.getDescription());
+            productResponseDTO.setValue(product.getValue());
+            return productResponseDTO;
         }
 
-        public static List<ProductResponseDto> toListDto(List<Product> productList){
-            List<ProductResponseDto> productResponseDtos = new ArrayList<>();
+        public static List<ProductResponseDTO> toListDTO(List<Product> productList){
+            List<ProductResponseDTO> productsResponseDTO = new ArrayList<>();
             for (Product product : productList){
-                productResponseDtos.add(toDto(product));
+                productsResponseDTO.add(toDTO(product));
             }
-            return productResponseDtos;
+            return productsResponseDTO;
+        }
+
+        public static Product toUpdate(Product product, ProductRequestDTO requestDTO) {
+            product.setName(requestDTO.getName());
+            product.setDescription(requestDTO.getDescription());
+            product.setValue(requestDTO.getValue());
+
+            return product;
         }
 }
