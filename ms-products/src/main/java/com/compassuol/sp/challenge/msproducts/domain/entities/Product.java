@@ -50,6 +50,10 @@ public class Product implements Serializable {
 
     public Product() { }
 
+    public Product(Long id) {
+        this.id = id;
+    }
+
     public Product(String name, String description, BigDecimal value) {
         this.name = name;
         this.description = description;
