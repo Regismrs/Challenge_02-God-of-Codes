@@ -1,19 +1,25 @@
 package com.compassuol.sp.challenge.msorders.domain.entities;
 
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
-@Embeddable
+@Entity
+@Table(name = "address_tb")
 public class Address {
-    private String street;
-    private int number;
-    private String complement;
-    private String city;
-    private String state;
+    @Id
+    @Size(min=9, max=9)
     private String postalCode;
+    @Column(nullable = false)
+    private String street;
+    @Column(nullable = false)
+    private String neighborhood;
+    @Column(nullable = false)
+    private String city;
+    @Column(nullable = false)
+    private String state;
 }
