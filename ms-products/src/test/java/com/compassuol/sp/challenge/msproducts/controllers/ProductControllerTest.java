@@ -1,7 +1,9 @@
 package com.compassuol.sp.challenge.msproducts.controllers;
 
 import com.compassuol.sp.challenge.msproducts.domain.dto.ProductResponseDTO;
+import com.compassuol.sp.challenge.msproducts.exceptions.NotFound;
 import com.compassuol.sp.challenge.msproducts.services.ProductService;
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -57,11 +59,35 @@ class ProductControllerTest {
 
     @Test
     void createProductWithInvalidDataThrowException() {
-        when(productService.saveProduct(PRODUCT_REQ_DTO)).thenThrow(RuntimeException.class);
+        when(productService.saveProduct(PRODUCT_REQ_DTO)).thenThrow(ConstraintViolationException.class);
 
         assertThatThrownBy(
                 () -> productController.createProduct(PRODUCT_REQ_DTO)
-        ).isInstanceOf(RuntimeException.class);
+        ).isInstanceOf(ConstraintViolationException.class);
+    }
+    @Test
+    void updateProductWithValidDataReturnProduct(){
+        when(productService.updateProduct(1L,PRODUCT_REQ_DTO)).thenReturn(PRODUCT_RES_DTO1);
 
+        ResponseEntity<ProductResponseDTO> sut = productController.updateProduct(1L, PRODUCT_REQ_DTO);
+
+        assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(sut.getBody()).isEqualTo(PRODUCT_RES_DTO1);
+    }
+    @Test
+    void updateProductWithInvalidDataThrowException(){
+        when(productService.updateProduct(1L,PRODUCT_REQ_DTO)).thenThrow(ConstraintViolationException.class);
+
+        assertThatThrownBy(
+                () -> productController.updateProduct(1L,PRODUCT_REQ_DTO)
+        ).isInstanceOf(ConstraintViolationException.class);
+    }
+    @Test
+    void updateProductWithNonExistentIdThrowException(){
+        when(productService.updateProduct(1L,PRODUCT_REQ_DTO)).thenThrow(NotFound.class);
+
+        assertThatThrownBy(
+                () -> productController.updateProduct(1L,PRODUCT_REQ_DTO)
+        ).isInstanceOf(NotFound.class);
     }
 }
