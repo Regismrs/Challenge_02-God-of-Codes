@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.proxy.HibernateProxy;
@@ -14,6 +15,7 @@ import org.hibernate.proxy.HibernateProxy;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -31,12 +33,27 @@ public class Order implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
-//    private List<Product> products;
 
-    @Column(nullable = false)
-    @Embedded
-    @NotNull
+    @OneToMany(cascade = {CascadeType.ALL})
+    @JoinColumn(name="order_id", referencedColumnName = "id")
+    private List<OrderProduct> products;
+
+    /**
+     * @ManyToOne varios pedidos podem ser do mesmo cep
+     * cascade = ao incluir/alterar o endereco salva na tabela address_tb
+     */
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name="postalCode", referencedColumnName = "postalCode")
     private Address address;
+
+    @Column(name="address_postal_code")
+    private String postalCode;
+
+    @Column(name="address_number")
+    private Integer number;
+
+    @Column(name="address_complement")
+    private String complement;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -70,20 +87,4 @@ public class Order implements Serializable {
     private LocalDateTime updatedDate;
 
     private LocalDateTime cancelDate;
-
-    @Override
-    public final boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null) return false;
-        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
-        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
-        if (thisEffectiveClass != oEffectiveClass) return false;
-        Order order = (Order) o;
-        return getId() != null && Objects.equals(getId(), order.getId());
-    }
-
-    @Override
-    public final int hashCode() {
-        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
-    }
 }
