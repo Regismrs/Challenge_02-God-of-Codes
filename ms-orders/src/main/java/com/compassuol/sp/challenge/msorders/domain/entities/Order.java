@@ -7,17 +7,15 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
-import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.proxy.HibernateProxy;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
+@Builder
 @Getter
 @Setter
 @ToString
@@ -33,10 +31,7 @@ public class Order implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
-
-    @OneToMany(cascade = {CascadeType.ALL})
-    @JoinColumn(name="order_id", referencedColumnName = "id")
-    private List<OrderProduct> products;
+    private List<Product> products;
 
     /**
      * @ManyToOne varios pedidos podem ser do mesmo cep

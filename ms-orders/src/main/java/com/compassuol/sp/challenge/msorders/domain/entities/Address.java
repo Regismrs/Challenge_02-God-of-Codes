@@ -1,9 +1,13 @@
 package com.compassuol.sp.challenge.msorders.domain.entities;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
@@ -22,4 +26,8 @@ public class Address {
     private String city;
     @Column(nullable = false)
     private String state;
+    @Column(nullable = false)
+    private Integer number;
+    @Column(nullable = false)
+    private String complement;
 }
