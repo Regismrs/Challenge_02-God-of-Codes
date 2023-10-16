@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AddressResponseDto {
     private String street;
-    private Integer number;
+    private String number;
     private String complement;
     private String city;
     private String state;

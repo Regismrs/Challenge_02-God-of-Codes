@@ -19,7 +19,8 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "order_tb")
 public class Order implements Serializable {
@@ -31,24 +32,9 @@ public class Order implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    private List<Product> products;
+    private List<OrderProduct> products;
 
-    /**
-     * @ManyToOne varios pedidos podem ser do mesmo cep
-     * cascade = ao incluir/alterar o endereco salva na tabela address_tb
-     */
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name="postalCode", referencedColumnName = "postalCode")
-    private Address address;
-
-    @Column(name="address_postal_code")
-    private String postalCode;
-
-    @Column(name="address_number")
-    private Integer number;
-
-    @Column(name="address_complement")
-    private String complement;
+    private String number;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

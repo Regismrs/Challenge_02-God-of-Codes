@@ -1,10 +1,8 @@
 package com.compassuol.sp.challenge.msorders.mapper;
 
 
-import com.compassuol.sp.challenge.msorders.domain.dto.AddressResponseDto;
-import com.compassuol.sp.challenge.msorders.domain.dto.OrderResponseDto;
-import com.compassuol.sp.challenge.msorders.domain.entities.Product;
-import com.compassuol.sp.challenge.msorders.domain.entities.Address;
+import com.compassuol.sp.challenge.msorders.domain.dto.*;
+import com.compassuol.sp.challenge.msorders.domain.entities.OrderProduct;
 import com.compassuol.sp.challenge.msorders.domain.entities.Order;
 import org.springframework.stereotype.Component;
 
@@ -13,31 +11,23 @@ import java.util.stream.Collectors;
 @Component
 public class OrderMapper {
 
-    Order order = new Order();
-
-    OrderResponseDto orderResponseDto = new OrderResponseDto();
-
-
-    public OrderResponseDto orderResponseDto(Order order){
-
+    public OrderResponseDto orderResponseDto(Order order, AddressViaCepDto addressViaCepDto){
         //foreach de produto
 
-        var address = new Address();
-
-        var addressMapper = new AddressResponseDto()
+        var addressResponseMapper = new AddressResponseDto()
                 .builder()
-                .street(address.getStreet())
-                .number(address.getNumber())
-                .complement(address.getComplement())
-                .city(address.getCity())
-                .state(address.getState())
-                .postalCode(address.getPostalCode())
+                .street(addressViaCepDto.logradouro())
+                .number(order.getNumber())
+                .complement(addressViaCepDto.bairro())
+                .city(addressViaCepDto.localidade())
+                .state(addressViaCepDto.uf())
+                .postalCode(addressViaCepDto.cep())
                 .build();
 
         return new OrderResponseDto()
                 .builder()
                 .id(order.getId())
-                .addressResponseDto(addressMapper)
+                .addressResponseDto(addressResponseMapper)
                 .build();
     }
 
@@ -48,12 +38,12 @@ public class OrderMapper {
         return (OrderResponseDto) orderResponseDtoList;
     }
 
-    private OrderResponseDto orderResponseDto1(Product productResponseDto){
+    private OrderResponseDto orderResponseDto1(OrderProduct productResponseDto){
 
         var orderResponse = new OrderResponseDto();
 
-        orderResponse.setId(productResponseDto.getProductId());
-        orderResponse.setQuantity(productResponseDto.getProductQuantity());
+        orderResponse.setId(productResponseDto.getId());
+        orderResponse.setQuantity(productResponseDto.getQuantity());
         return orderResponse;
     }
 

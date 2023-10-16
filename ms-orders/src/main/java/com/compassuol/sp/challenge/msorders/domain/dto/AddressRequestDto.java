@@ -8,7 +8,7 @@ import lombok.Data;
 public class AddressRequestDto {
 
     private String street;
-    private Integer number;
+    private String number;
     private String postalCode;
 
 }

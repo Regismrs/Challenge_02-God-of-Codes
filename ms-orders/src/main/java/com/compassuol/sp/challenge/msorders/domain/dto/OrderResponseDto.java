@@ -1,6 +1,6 @@
 package com.compassuol.sp.challenge.msorders.domain.dto;
 
-import com.compassuol.sp.challenge.msorders.domain.entities.Product;
+import com.compassuol.sp.challenge.msorders.domain.entities.OrderProduct;
 import com.compassuol.sp.challenge.msorders.enums.PaymentEnum;
 import lombok.*;
 
@@ -18,7 +18,7 @@ public class OrderResponseDto {
 
     private Integer quantity;
 
-    private List<Product> products;
+    private List<OrderProduct> products;
 
     private AddressResponseDto addressResponseDto;
 
