@@ -1,10 +1,10 @@
 package com.compassuol.sp.challenge.msproducts.services;
 
-import com.compassuol.sp.challenge.msproducts.exceptions.NotFound;
 import com.compassuol.sp.challenge.msproducts.domain.dto.ProductRequestDTO;
 import com.compassuol.sp.challenge.msproducts.domain.dto.ProductResponseDTO;
-import com.compassuol.sp.challenge.msproducts.mapper.ProductMapper;
 import com.compassuol.sp.challenge.msproducts.domain.entities.Product;
+import com.compassuol.sp.challenge.msproducts.exceptions.NotFound;
+import com.compassuol.sp.challenge.msproducts.mapper.ProductMapper;
 import com.compassuol.sp.challenge.msproducts.repositories.ProductRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class ProductService {
     public void deleteProduct(Long id){
         Product product = productRepository.findById(id).orElseThrow(()
                 -> new NotFound("Product not found"));
-        productRepository.delete(product);
+        productRepository.deleteById(product.getId());
     }
 
     @Transactional

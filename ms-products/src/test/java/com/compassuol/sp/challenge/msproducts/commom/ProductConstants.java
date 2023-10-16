@@ -9,6 +9,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ProductConstants {
+
+
+
     public static final Product INVALID_PRODUCT = new Product();
 
     public static final Product EMPTY_PRODUCT_WITH_ID = new Product(1L);
