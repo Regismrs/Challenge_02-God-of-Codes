@@ -28,6 +28,11 @@ public class OrderMapper {
 
     //metodo funcionando igual ao ms-products
     public static OrderResponseDto toDto(Order order, AddressViaCepDto addressViaCepDto){
+
+        List<ProductRequestDto> products =
+                order.getProducts().stream()
+                        .map(p -> new ProductRequestDto(p.getProductId(), p.getQuantity())).toList();
+
         var addressResponseMapper = new AddressResponseDto()
                 .builder()
                 .street(addressViaCepDto.logradouro())
@@ -41,7 +46,7 @@ public class OrderMapper {
         return new OrderResponseDto()
                 .builder()
                 .id(order.getId())
-                .products(order.getProducts())
+                .products(products)
                 .addressResponseDto(addressResponseMapper)
                 .paymentMethod(order.getPaymentMethod())
                 .subtotalValue(order.getSubTotalValue())
@@ -66,7 +71,6 @@ public class OrderMapper {
         var orderResponse = new OrderResponseDto();
 
         orderResponse.setId(productResponseDto.getId());
-        orderResponse.setQuantity(productResponseDto.getQuantity());
         return orderResponse;
     }
 

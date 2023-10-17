@@ -18,9 +18,7 @@ public class OrderResponseDto {
 
     private Long id;
 
-    private Integer quantity;
-
-    private List<OrderProduct> products;
+    private List<ProductRequestDto> products;
 
     private AddressResponseDto addressResponseDto;
 
