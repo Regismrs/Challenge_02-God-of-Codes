@@ -3,11 +3,13 @@ package com.compassuol.sp.challenge.msproducts.services;
 import com.compassuol.sp.challenge.msproducts.domain.dto.ProductRequestDTO;
 import com.compassuol.sp.challenge.msproducts.domain.dto.ProductResponseDTO;
 import com.compassuol.sp.challenge.msproducts.domain.entities.Product;
+import com.compassuol.sp.challenge.msproducts.exceptions.NotFound;
 import com.compassuol.sp.challenge.msproducts.repositories.ProductRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.internal.matchers.Null;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 
@@ -138,5 +140,26 @@ class ProductServiceTest {
         assertThatThrownBy(
                 () -> productService.updateProduct(2L, new ProductRequestDTO())
         ).isInstanceOf(DataIntegrityViolationException.class);
+    }
+
+    @Test
+    void findByIdWithExistentIdReturnsProduct() {
+        when(productRepository.findById(1L)).thenReturn(Optional.of(PRODUCT_WITH_ID));
+
+        ProductResponseDTO sut = productService.findById(1L);
+
+        assertThat(sut).isNotNull();
+        assertThat(sut).isInstanceOf(ProductResponseDTO.class);
+        assertThat(sut)
+                .usingRecursiveComparison()
+                .isEqualTo(PRODUCT_WITH_ID);
+    }
+
+    @Test
+    void findByIdWithNonExistentIdReturnsProduct() {
+        when(productRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> productService.findById(1L))
+                .isInstanceOf(NotFound.class);
     }
 }

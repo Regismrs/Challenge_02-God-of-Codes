@@ -20,6 +20,8 @@ import java.util.Optional;
 
 import static com.compassuol.sp.challenge.msproducts.commom.ProductConstants.*;
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 
 @ActiveProfiles("test")
 @DataJpaTest
