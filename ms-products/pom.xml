@@ -57,6 +57,10 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+					<image>
+						<name>regismrs/${project.artifactId}:${project.version}</name>
+					</image>
+					<pullPolicy>IF_NOT_PRESENT</pullPolicy>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
@@ -136,26 +140,6 @@
 				</executions>
 			</plugin>
 
-			<plugin>
-				<groupId>org.pitest</groupId>
-				<artifactId>pitest-maven</artifactId>
-				<version>1.8.0</version>
-				<dependencies>
-					<dependency>
-						<groupId>org.pitest</groupId>
-						<artifactId>pitest-junit5-plugin</artifactId>
-						<version>0.14</version>
-					</dependency>
-				</dependencies>
-				<configuration>
-					<targetTests>
-						<param>br.com.lilbits.testsstarwars.*Test</param>
-					</targetTests>
-					<excludedClasses>
-						<param>br.com.lilbits.testsstarwars.domain.Planet</param>
-					</excludedClasses>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
 
