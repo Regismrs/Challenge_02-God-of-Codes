@@ -1,3 +1,5 @@
+USE db_ecommerce;
+TRUNCATE TABLE products_tb;
 INSERT INTO products_tb (name, description, value)
 VALUES
     ('Product 1', 'Description of Product 1', 19.99),
