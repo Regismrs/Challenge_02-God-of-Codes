@@ -18,12 +18,14 @@ public class OrderProduct {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long orderId;
-
-    @Column(nullable = false)
+    @Column(name="product_id", nullable = false)
     private Long productId;
 
     @Min(value = 1)
     private Integer quantity;
+
+    public OrderProduct(Long productId, Integer quantity) {
+        this.productId = productId;
+        this.quantity = quantity;
+    }
 }
