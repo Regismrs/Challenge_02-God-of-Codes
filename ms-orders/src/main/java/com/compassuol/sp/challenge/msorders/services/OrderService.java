@@ -8,19 +8,34 @@ import com.compassuol.sp.challenge.msorders.enums.StatusEnum;
 import com.compassuol.sp.challenge.msorders.mapper.OrderMapper;
 import com.compassuol.sp.challenge.msorders.repositories.OrderRepository;
 import com.compassuol.sp.challenge.msorders.services.third.ViaCepService;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class OrderService {
 
-    @Autowired
-    OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
+
+    private final ViaCepService viaCepService;
 
     @Autowired
-    ViaCepService viaCepService;
+    public OrderService(OrderRepository orderRepository, ViaCepService viaCepService) {
+        this.orderRepository = orderRepository;
+        this.viaCepService = viaCepService;
+    }
+
+    public List<OrderResponseDto> findAll(){
+        List<Order> orders = orderRepository.findAll();
+
+        return OrderMapper.toListDTO(orders, addressViaCepDto);
+    }
 
     public OrderResponseDto saveOrder(OrderRequestDto orderDto) {
         Order order = OrderMapper.toModel(orderDto);
