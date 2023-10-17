@@ -1,4 +1,6 @@
-CREATE TABLE products_tb
+CREATE DATABASE IF NOT EXISTS db_ecommerce;
+USE db_ecommerce;
+CREATE TABLE IF NOT exists products_tb
 (
     id               BIGINT AUTO_INCREMENT NOT NULL,
     name             VARCHAR(255) NOT NULL,
@@ -6,8 +8,6 @@ CREATE TABLE products_tb
     value            DECIMAL      NOT NULL,
     create_date_time datetime NULL,
     update_date_time datetime NULL,
-    CONSTRAINT pk_products_tb PRIMARY KEY (id)
+    CONSTRAINT pk_products_tb PRIMARY KEY (id),
+    CONSTRAINT uc_products_tb_name UNIQUE (name)
 );
-
-ALTER TABLE products_tb
-    ADD CONSTRAINT uc_products_tb_name UNIQUE (name);
