@@ -1,5 +1,6 @@
 package com.compassuol.sp.challenge.msorders.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 
@@ -10,8 +11,10 @@ import lombok.*;
 @NoArgsConstructor
 public class ProductRequestDto {
 
+    @JsonProperty("product_id")
     private Long productId;
 
-    private Integer productQuantity;
+    @JsonProperty("quantity")
+    private Integer quantity;
 
 }
