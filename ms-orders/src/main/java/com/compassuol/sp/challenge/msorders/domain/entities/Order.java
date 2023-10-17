@@ -7,21 +7,21 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
-import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.proxy.HibernateProxy;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
+@Builder
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "order_tb")
 public class Order implements Serializable {
@@ -33,42 +33,29 @@ public class Order implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
-
-    @OneToMany(cascade = {CascadeType.ALL})
-    @JoinColumn(name="order_id", referencedColumnName = "id")
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "order_product",
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
     private List<OrderProduct> products;
 
-    /**
-     * @ManyToOne varios pedidos podem ser do mesmo cep
-     * cascade = ao incluir/alterar o endereco salva na tabela address_tb
-     */
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name="postalCode", referencedColumnName = "postalCode")
-    private Address address;
+    private String number;
 
-    @Column(name="address_postal_code")
     private String postalCode;
-
-    @Column(name="address_number")
-    private Integer number;
-
-    @Column(name="address_complement")
-    private String complement;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @NotBlank
     private PaymentEnum paymentMethod;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @NotBlank
     private StatusEnum status;
 
     @Column(nullable = false)
-    @Positive
+    @ColumnDefault("0.0")
     @NotNull
-    private BigDecimal subtotalValue;
+    private BigDecimal subTotalValue;
 
     @Column(nullable = false)
     @Positive
