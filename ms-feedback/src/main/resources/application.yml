@@ -1,0 +1,16 @@
+server:
+  port: 8083
+spring:
+  application:
+    name: ms-feedback
+  datasource:
+    url: jdbc:mysql://localhost:3306/db_ecommerce?createDatabaseIfNotExist=true&useTimezone=true&serverTimezone=America/Sao_Paulo
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
