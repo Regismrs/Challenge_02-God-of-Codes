@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.io.Serializable;
 
+@Builder
 @Getter
 @Setter
 @ToString
