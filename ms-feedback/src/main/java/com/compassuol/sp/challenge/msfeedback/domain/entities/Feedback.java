@@ -1,5 +1,7 @@
 package com.compassuol.sp.challenge.msfeedback.domain.entities;
 
+import com.compassuol.sp.challenge.msfeedback.enums.ScaleEnum;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,8 +25,10 @@ public class Feedback implements Serializable {
 
     @Column(name="order_id", nullable = false)
     private Long orderId;
-    //enum
-    private String scale;
+
+    @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false)
+    private ScaleEnum scale;
 
     private String comment;
 }
