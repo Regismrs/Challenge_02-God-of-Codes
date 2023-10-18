@@ -1,5 +1,6 @@
 package com.compassuol.sp.challenge.msfeedback.domain.dto;
 
+import com.compassuol.sp.challenge.msfeedback.enums.ScaleEnum;
 import lombok.*;
 
 @Builder
@@ -10,9 +11,7 @@ import lombok.*;
 public class FeedbackResponse {
 
     private Long id;
-
     private Long orderId;
-    //enum
-    private String scale;
+    private ScaleEnum scale;
     private String comment;
 }
