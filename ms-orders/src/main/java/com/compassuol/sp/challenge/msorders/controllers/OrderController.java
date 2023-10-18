@@ -23,9 +23,4 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(orderService.saveOrder(orderDto));
     }
 
-    //@PostMapping("/teste")
-    //public ResponseEntity<Object> teste(@RequestBody OrderRequestDto orderDto) {
-    //    return ResponseEntity.status(HttpStatus.OK)
-    //            .body(orderDto);
-    //}
 }
