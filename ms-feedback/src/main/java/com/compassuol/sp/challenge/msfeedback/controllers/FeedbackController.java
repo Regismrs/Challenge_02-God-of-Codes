@@ -1,13 +1,11 @@
 package com.compassuol.sp.challenge.msfeedback.controllers;
 
+import com.compassuol.sp.challenge.msfeedback.domain.dto.FeedbackRequest;
 import com.compassuol.sp.challenge.msfeedback.domain.dto.FeedbackResponse;
 import com.compassuol.sp.challenge.msfeedback.services.FeedbackService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,9 +20,9 @@ public class FeedbackController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> createFeedback(Object fbRequestDto) {
-
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+    public ResponseEntity<FeedbackResponse> createFeedback(@RequestBody FeedbackRequest feedbackRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(feedbackService.saveFeedback(feedbackRequest));
     }
 
     @GetMapping
