@@ -1,6 +1,5 @@
 package com.compassuol.sp.challenge.msorders.domain.dto;
 
-import com.compassuol.sp.challenge.msorders.domain.entities.OrderProduct;
 import com.compassuol.sp.challenge.msorders.enums.PaymentEnum;
 import com.compassuol.sp.challenge.msorders.enums.StatusEnum;
 import lombok.*;

@@ -3,12 +3,12 @@ package com.compassuol.sp.challenge.msorders.domain.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Builder
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@RequiredArgsConstructor
 public class AddressResponseDto {
     private String street;
     private String number;

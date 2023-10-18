@@ -1,9 +1,9 @@
 package com.compassuol.sp.challenge.msorders.domain.entities;
 
+import com.compassuol.sp.challenge.msorders.domain.dto.AddressRequestDto;
 import com.compassuol.sp.challenge.msorders.enums.PaymentEnum;
 import com.compassuol.sp.challenge.msorders.enums.StatusEnum;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
@@ -40,9 +40,8 @@ public class Order implements Serializable {
     )
     private List<OrderProduct> products;
 
-    private String number;
-
-    private String postalCode;
+    @Embedded
+    private AddressRequestDto address;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

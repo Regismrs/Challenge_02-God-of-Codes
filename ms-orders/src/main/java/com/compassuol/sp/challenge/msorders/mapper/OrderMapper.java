@@ -2,18 +2,19 @@ package com.compassuol.sp.challenge.msorders.mapper;
 
 
 import com.compassuol.sp.challenge.msorders.domain.dto.*;
-import com.compassuol.sp.challenge.msorders.domain.entities.OrderProduct;
 import com.compassuol.sp.challenge.msorders.domain.entities.Order;
+import com.compassuol.sp.challenge.msorders.domain.entities.OrderProduct;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class OrderMapper {
 
     public static Order toModel(OrderRequestDto orderDto){
+
+        var address = new AddressResponseDto();
 
         List<OrderProduct> products =
                 orderDto.getOrderProducts().stream()
@@ -21,66 +22,33 @@ public class OrderMapper {
 
         Order order = new Order();
         order.setProducts(products);
-        order.setNumber(orderDto.getAddressRequestDto().getNumber());
-        order.setPostalCode(orderDto.getAddressRequestDto().getPostalCode());
+        address.setNumber(orderDto.getAddressRequestDto().getNumber());
+        address.setPostalCode(orderDto.getAddressRequestDto().getPostalCode());
         order.setPaymentMethod(orderDto.getPaymentMethod());
         return order;
     }
 
-    //metodo funcionando igual ao ms-products
-    public static OrderResponseDto toDto(Order order, AddressViaCepDto addressViaCepDto){
+    public static OrderResponseDto toDto(Order request){
 
-        List<ProductRequestDto> products =
-                order.getProducts().stream()
-                        .map(p -> new ProductRequestDto(p.getProductId(), p.getQuantity())).toList();
+        ArrayList<ProductRequestDto> productRequest = new ArrayList<>();
 
         var addressResponseMapper = new AddressResponseDto()
                 .builder()
-                .street(addressViaCepDto.logradouro())
-                .number(order.getNumber())
-                .complement(addressViaCepDto.bairro())
-                .city(addressViaCepDto.localidade())
-                .state(addressViaCepDto.uf())
-                .postalCode(addressViaCepDto.cep())
+                .street(request.getAddress().getStreet())
+                .number(request.getAddress().getNumber())
+                .postalCode(request.getAddress().getPostalCode())
                 .build();
 
         return new OrderResponseDto()
                 .builder()
-                .id(order.getId())
-                .products(products)
+                .products(productRequest)
                 .addressResponseDto(addressResponseMapper)
-                .paymentMethod(order.getPaymentMethod())
-                .subtotalValue(order.getSubTotalValue())
-                .discount(order.getDiscount())
-                .totalValue(order.getTotalValue())
-                .createdDate(order.getCreatedDate())
-                .status(order.getStatus())
+                .paymentMethod(request.getPaymentMethod())
+                .subtotalValue(request.getSubTotalValue())
+                .discount(request.getDiscount())
+                .totalValue(request.getTotalValue())
+                .createdDate(request.getCreatedDate())
+                .status(request.getStatus())
                 .build();
     }
-
-
-    //rever
-    public OrderResponseDto orderList(Order order){
-        var orderResponseDtoList = order.getProducts().stream()
-                .map(this::orderResponseDto1).collect(Collectors.toList());
-        return (OrderResponseDto) orderResponseDtoList;
-    }
-
-    //rever
-    private OrderResponseDto orderResponseDto1(OrderProduct productResponseDto){
-
-        var orderResponse = new OrderResponseDto();
-
-        orderResponse.setId(productResponseDto.getId());
-        return orderResponse;
-    }
-
-    public static List<OrderResponseDto> toListDTO(List<Order> orderList, AddressViaCepDto addressViaCepDto){
-        List<OrderResponseDto> orderResponseDTO = new ArrayList<>();
-        for (Order order : orderList){
-            orderResponseDTO.add(toDto(order, addressViaCepDto));
-        }
-        return orderResponseDTO;
-    }
-
 }

@@ -23,6 +23,11 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(orderService.saveOrder(orderDto));
     }
 
+//    @GetMapping
+//    public ResponseEntity<List<OrderResponseDto>> getAll(AddressViaCepDto addressViaCepDto) {
+//        return ResponseEntity.status(HttpStatus.OK).body(orderService.findAll(addressViaCepDto));
+//    }
+
     //@PostMapping("/teste")
     //public ResponseEntity<Object> teste(@RequestBody OrderRequestDto orderDto) {
     //    return ResponseEntity.status(HttpStatus.OK)
