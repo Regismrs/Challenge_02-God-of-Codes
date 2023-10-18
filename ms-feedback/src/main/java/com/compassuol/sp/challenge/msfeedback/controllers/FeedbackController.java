@@ -1,6 +1,5 @@
 package com.compassuol.sp.challenge.msfeedback.controllers;
 
-
 import com.compassuol.sp.challenge.msfeedback.domain.dto.FeedbackRequest;
 import com.compassuol.sp.challenge.msfeedback.domain.dto.FeedbackResponse;
 import com.compassuol.sp.challenge.msfeedback.services.FeedbackService;
@@ -23,6 +22,13 @@ public class FeedbackController {
     public FeedbackController(FeedbackService feedbackService) {
         this.feedbackService = feedbackService;
     }
+    
+    @GetMapping
+    public ResponseEntity<List
+            <FeedbackResponse>> getAll() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(feedbackService.getAll());
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<FeedbackResponse> updateFeedback(
@@ -31,13 +37,11 @@ public class FeedbackController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(feedbackService.updateProduct(id, fbRequest));
-    }
 
-    @GetMapping
-    public ResponseEntity<List
-            <FeedbackResponse>> getAll() {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(feedbackService.getAll());
+    @PostMapping
+    public ResponseEntity<FeedbackResponse> createFeedback(@RequestBody FeedbackRequest feedbackRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(feedbackService.saveFeedback(feedbackRequest));
     }
 
 }
