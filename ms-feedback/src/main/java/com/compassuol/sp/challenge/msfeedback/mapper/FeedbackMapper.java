@@ -10,7 +10,7 @@ import java.util.List;
 
 public class FeedbackMapper {
 
-    public Feedback toModel (FeedbackRequest request){
+    public static Feedback toModel (FeedbackRequest request){
 
         var feedback = new Feedback()
                 .builder()
@@ -22,7 +22,7 @@ public class FeedbackMapper {
         return feedback;
     }
 
-    public FeedbackResponse toDto (Feedback feedback){
+    public static FeedbackResponse toDto (Feedback feedback){
 
         var response = new FeedbackResponse()
                 .builder()
@@ -35,7 +35,7 @@ public class FeedbackMapper {
         return response;
     }
 
-    public List<FeedbackResponse> toList (List<Feedback> feedbackList){
+    public static List<FeedbackResponse> toList (List<Feedback> feedbackList){
         List<FeedbackResponse> feedbackResponseList = new ArrayList<>();
         for (Feedback feedback : feedbackList){
             feedbackResponseList.add(toDto(feedback));
