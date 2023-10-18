@@ -1,5 +1,6 @@
 package com.compassuol.sp.challenge.msfeedback.services;
 
+import com.compassuol.sp.challenge.msfeedback.domain.dto.FeedbackRequest;
 import com.compassuol.sp.challenge.msfeedback.domain.dto.FeedbackResponse;
 import com.compassuol.sp.challenge.msfeedback.domain.entities.Feedback;
 import com.compassuol.sp.challenge.msfeedback.mapper.FeedbackMapper;
@@ -20,6 +21,13 @@ public class FeedbackService {
         List<Feedback> feedbackList = feedbackRepository.findAll();
 
         return FeedbackMapper.toList(feedbackList);
+    }
+
+    public FeedbackResponse saveFeedback(FeedbackRequest feedbackRequest) {
+        Feedback feedback = FeedbackMapper.toModel(feedbackRequest);
+        var feedbackSave = feedbackRepository.save(feedback);
+
+        return FeedbackMapper.toDto(feedbackSave);
     }
 
 }
