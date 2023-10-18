@@ -36,7 +36,8 @@ public class FeedbackController {
             @RequestBody FeedbackRequest fbRequest) {
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(feedbackService.updateProduct(id, fbRequest));
+                .body(feedbackService.updateFeedback(id, fbRequest));
+    }
 
     @PostMapping
     public ResponseEntity<FeedbackResponse> createFeedback(@RequestBody FeedbackRequest feedbackRequest) {

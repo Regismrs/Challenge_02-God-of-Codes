@@ -29,13 +29,13 @@ public class FeedbackService {
     }
 
     @Transactional
-    public FeedbackResponse updateProduct(Long id, FeedbackRequest fbRequest) {
+    public FeedbackResponse updateFeedback(Long id, FeedbackRequest fbRequest) {
         Feedback feedback = feedbackRepository.findById(id)
                 .orElseThrow(() -> new NotFound("Feedback " + id + " not found."));
 
         feedback.setId(id);
         feedback.setComment(fbRequest.getComment());
-        feedback.setScale(fbRequest.getComment());
+        feedback.setScale(fbRequest.getScale());
         feedback.setOrderId(fbRequest.getOrderId());
 
         Feedback feedbackUpdated = feedbackRepository.save(feedback);
