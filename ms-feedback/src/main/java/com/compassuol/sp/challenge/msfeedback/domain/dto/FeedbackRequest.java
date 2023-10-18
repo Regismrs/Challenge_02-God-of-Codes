@@ -1,5 +1,6 @@
 package com.compassuol.sp.challenge.msfeedback.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @Builder
@@ -9,6 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 public class FeedbackRequest {
 
+    @JsonProperty("order_id")
     private Long orderId;
 
     private String scale;
