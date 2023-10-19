@@ -60,6 +60,24 @@ class FeedbackControllerTest {
         assertThatThrownBy(
                 () -> feedbackController.updateFeedback(1L, FEEDBACK_REQUEST)
         ).isInstanceOf(NotFound.class);
+
+    }
+    @Test
+    void FeedbackByIdWithExistent() {
+        when(service.findById(1L)).thenReturn(FEEDBACK_RESPONSE);
+
+        ResponseEntity<FeedbackResponse> sut = feedbackController.getFeedback(1L);
+
+        assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(sut.getBody()).isEqualTo(FEEDBACK_RESPONSE);
+    }
+    @Test
+    void FeedbackByIdWithNonExistent() {
+        when(service.findById(1L)).thenThrow(NotFound.class);
+
+        assertThatThrownBy(
+                () -> feedbackController.getFeedback(1L)
+        ).isInstanceOf(NotFound.class);
     }
 
     @Test

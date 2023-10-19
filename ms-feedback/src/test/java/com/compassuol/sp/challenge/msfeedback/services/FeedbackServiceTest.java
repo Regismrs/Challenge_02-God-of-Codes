@@ -62,13 +62,23 @@ class FeedbackServiceTest {
                 () -> feedbackService.updateFeedback(1L, FEEDBACK_REQUEST )
         ).isInstanceOf(RuntimeException.class);
     }
+  
+    @Test
+    void findByIdWithExistentIdReturnsFeedback() {
+        when(repository.findById(1L)).thenReturn(Optional.of(FEEDBACK));
 
+        FeedbackResponse sut = feedbackService.findById(1L);
+
+        assertThat(sut).isNotNull().isInstanceOf(FeedbackResponse.class).usingRecursiveComparison().isEqualTo(FEEDBACK_RESPONSE);
+    }
+  
     @Test
     void deleteFeedbackWithExistentIdReturnsSuccess() {
         when(feedbackRepository.findById(1L)).thenReturn(Optional.of(FEEDBACK));
         feedbackService.deleteFeedback(1L);
         verify(feedbackRepository).delete(FEEDBACK);
     }
+  
     @Test
     void deleteFeedbackWithNonExistentIdThrowsException() {
         when(feedbackRepository.findById(1L)).thenThrow(NotFound.class);
@@ -76,5 +86,5 @@ class FeedbackServiceTest {
         assertThatThrownBy( () -> feedbackService.deleteFeedback(1L )
         ).isInstanceOf(NotFound.class);
     }
-
+  
 }
