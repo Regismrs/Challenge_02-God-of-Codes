@@ -1,8 +1,9 @@
 package com.compassuol.sp.challenge.msorders.domain.dto;
 
-import com.compassuol.sp.challenge.msorders.domain.entities.OrderProduct;
 import com.compassuol.sp.challenge.msorders.enums.PaymentEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,13 +11,14 @@ import java.util.List;
 
 @Data
 @Builder
-public class OrderRequestDto {
-
+public class OrderRequest {
+    @NotNull
     @JsonProperty("products")
-    private List<ProductRequestDto> orderProducts;
+    private List<ProductRequest> productsRequest;
 
+    @NotNull
     @JsonProperty("address")
-    private AddressRequestDto addressRequestDto;
+    private AddressRequest addressRequest;
 
     @JsonProperty("payment_method")
     private PaymentEnum paymentMethod;

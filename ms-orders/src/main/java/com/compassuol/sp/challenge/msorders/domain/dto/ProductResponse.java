@@ -9,7 +9,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductRequestDto {
+public class ProductResponse {
 
     @JsonProperty("product_id")
     private Long productId;
