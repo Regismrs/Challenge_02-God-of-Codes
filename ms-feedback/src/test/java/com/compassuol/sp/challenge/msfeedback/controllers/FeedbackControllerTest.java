@@ -64,7 +64,7 @@ class FeedbackControllerTest {
     }
     @Test
     void FeedbackByIdWithExistent() {
-        when(service.findById(1L)).thenReturn(FEEDBACK_RESPONSE);
+        when(feedbackService.findById(1L)).thenReturn(FEEDBACK_RESPONSE);
 
         ResponseEntity<FeedbackResponse> sut = feedbackController.getFeedback(1L);
 
@@ -73,7 +73,7 @@ class FeedbackControllerTest {
     }
     @Test
     void FeedbackByIdWithNonExistent() {
-        when(service.findById(1L)).thenThrow(NotFound.class);
+        when(feedbackService.findById(1L)).thenThrow(NotFound.class);
 
         assertThatThrownBy(
                 () -> feedbackController.getFeedback(1L)
@@ -85,8 +85,7 @@ class FeedbackControllerTest {
         Long id = 1L;
         doNothing().when(feedbackService).deleteFeedback(id);
         ResponseEntity<Object> response = feedbackController.deleteFeedback(id);
-        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
-        Assertions.assertEquals("Feedback " + id + " deleted successfully", response.getBody());
+        Assertions.assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         verify(feedbackService).deleteFeedback(id);
     }
 

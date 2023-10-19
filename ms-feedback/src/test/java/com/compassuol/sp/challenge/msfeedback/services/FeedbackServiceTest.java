@@ -65,7 +65,7 @@ class FeedbackServiceTest {
   
     @Test
     void findByIdWithExistentIdReturnsFeedback() {
-        when(repository.findById(1L)).thenReturn(Optional.of(FEEDBACK));
+        when(feedbackRepository.findById(1L)).thenReturn(Optional.of(FEEDBACK));
 
         FeedbackResponse sut = feedbackService.findById(1L);
 
