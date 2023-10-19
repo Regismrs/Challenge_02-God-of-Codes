@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.compassuol.sp.challenge</groupId>
-	<artifactId>ms-products</artifactId>
+	<artifactId>ms-feedback</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ms-products</name>
-	<description>Products MS Application</description>
+	<name>ms-feedback</name>
+	<description>Ms feedback</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
@@ -135,7 +135,6 @@
 					</execution>
 				</executions>
 			</plugin>
-
 		</plugins>
 	</build>
 
