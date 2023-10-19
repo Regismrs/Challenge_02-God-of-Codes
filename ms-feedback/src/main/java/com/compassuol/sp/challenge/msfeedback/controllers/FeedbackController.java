@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/feedback")
+@RequestMapping("/feedbacks")
 public class FeedbackController {
 
     private final FeedbackService feedbackService;
@@ -22,7 +22,7 @@ public class FeedbackController {
     public FeedbackController(FeedbackService feedbackService) {
         this.feedbackService = feedbackService;
     }
-    
+
     @GetMapping
     public ResponseEntity<List
             <FeedbackResponse>> getAll() {
@@ -43,6 +43,12 @@ public class FeedbackController {
     public ResponseEntity<FeedbackResponse> createFeedback(@RequestBody FeedbackRequest feedbackRequest) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(feedbackService.saveFeedback(feedbackRequest));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteFeedback(@PathVariable("id")Long id){
+        feedbackService.deleteFeedback(id);
+        return ResponseEntity.status(HttpStatus.OK).body("Feedback " + id + " deleted successfully");
     }
 
 }
