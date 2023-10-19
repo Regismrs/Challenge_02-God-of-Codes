@@ -4,6 +4,8 @@ import com.compassuol.sp.challenge.msfeedback.domain.dto.FeedbackRequest;
 import com.compassuol.sp.challenge.msfeedback.domain.dto.FeedbackResponse;
 import com.compassuol.sp.challenge.msfeedback.exceptions.NotFound;
 import com.compassuol.sp.challenge.msfeedback.services.FeedbackService;
+import jakarta.validation.ConstraintViolationException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,14 +17,14 @@ import org.springframework.http.ResponseEntity;
 import static com.compassuol.sp.challenge.msfeedback.common.FeedbackConstants.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class FeedbackControllerTest {
     @InjectMocks
     private FeedbackController feedbackController;
     @Mock
-    private FeedbackService service;
+    private FeedbackService feedbackService;
     @Test
     void updateFeedbackWithValidDataReturnFeedback() {
         FeedbackResponse expected = new FeedbackResponse(
@@ -32,7 +34,7 @@ class FeedbackControllerTest {
                     FEEDBACK_RESPONSE.getComment()
                 );
 
-        when(service.updateFeedback(1L, FEEDBACK_REQUEST)).thenReturn(FEEDBACK_RESPONSE);
+        when(feedbackService.updateFeedback(1L, FEEDBACK_REQUEST)).thenReturn(FEEDBACK_RESPONSE);
 
         ResponseEntity<FeedbackResponse> response =
                 feedbackController.updateFeedback(1L, FEEDBACK_REQUEST);
@@ -44,16 +46,16 @@ class FeedbackControllerTest {
 
     @Test
     void updateFeedbackWithInvalidDataThrowsException() {
-        when(service.updateFeedback(any(Long.class), any(FeedbackRequest.class))).thenThrow(RuntimeException.class);
+        when(feedbackService.updateFeedback(any(Long.class), any(FeedbackRequest.class))).thenThrow(ConstraintViolationException.class);
 
         assertThatThrownBy(
                 () -> feedbackController.updateFeedback(1L, FEEDBACK_REQUEST)
-        ).isInstanceOf(RuntimeException.class);
+        ).isInstanceOf(ConstraintViolationException.class);
     }
 
     @Test
     void updateFeedbackWithUnexistentIdThrowsException() {
-        when(service.updateFeedback(any(Long.class), any(FeedbackRequest.class))).thenThrow(NotFound.class);
+        when(feedbackService.updateFeedback(any(Long.class), any(FeedbackRequest.class))).thenThrow(NotFound.class);
 
         assertThatThrownBy(
                 () -> feedbackController.updateFeedback(1L, FEEDBACK_REQUEST)
@@ -77,4 +79,26 @@ class FeedbackControllerTest {
                 () -> feedbackController.getFeedback(1L)
         ).isInstanceOf(NotFound.class);
     }
+
+    @Test
+    void deleteFeedbackWithExistentIdReturnsSuccess() {
+        Long id = 1L;
+        doNothing().when(feedbackService).deleteFeedback(id);
+        ResponseEntity<Object> response = feedbackController.deleteFeedback(id);
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertEquals("Feedback " + id + " deleted successfully", response.getBody());
+        verify(feedbackService).deleteFeedback(id);
+    }
+
+    @Test
+    void deleteFeedbackWithNonexistentIdThrowsException(){
+        Long id = 1L;
+        doThrow(new NotFound("Feedback " + id + " not found")).when(feedbackService).deleteFeedback(id);
+
+        assertThatThrownBy(
+                () -> feedbackController.deleteFeedback(id)
+        ).isInstanceOf(NotFound.class);
+    }
+
+
 }

@@ -15,7 +15,7 @@ import java.util.Optional;
 import static com.compassuol.sp.challenge.msfeedback.common.FeedbackConstants.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class FeedbackServiceTest {
@@ -23,16 +23,7 @@ class FeedbackServiceTest {
     @InjectMocks
     private FeedbackService feedbackService;
     @Mock
-    private FeedbackRepository repository;
-
-
-    @Test
-    void getAll() {
-    }
-
-    @Test
-    void saveFeedback() {
-    }
+    private FeedbackRepository feedbackRepository;
 
     @Test
     void updateFeedbackWithExistentIdReturnFeedback() {
@@ -42,8 +33,8 @@ class FeedbackServiceTest {
                 FEEDBACK.getScale(),
                 FEEDBACK.getComment());
 
-        when(repository.findById(1L)).thenReturn(Optional.of(FEEDBACK));
-        when(repository.save(FEEDBACK)).thenReturn(FEEDBACK);
+        when(feedbackRepository.findById(1L)).thenReturn(Optional.of(FEEDBACK));
+        when(feedbackRepository.save(FEEDBACK)).thenReturn(FEEDBACK);
 
         FeedbackResponse sut = feedbackService.updateFeedback(1L, FEEDBACK_REQUEST);
 
@@ -53,7 +44,7 @@ class FeedbackServiceTest {
 
     @Test
     void updateFeedbackWithUnexistentIdThrowsException() {
-        when(repository.findById(1L)).thenReturn(Optional.empty());
+        when(feedbackRepository.findById(1L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(
                 () -> feedbackService.updateFeedback(1L, FEEDBACK_REQUEST )
@@ -62,8 +53,8 @@ class FeedbackServiceTest {
 
     @Test
     void updateFeedbackWithIdAndInvalidDataThrowsException() {
-        when(repository.findById(1L)).thenReturn(Optional.of(FEEDBACK));
-        when(repository.save(FEEDBACK)).thenThrow(RuntimeException.class);
+        when(feedbackRepository.findById(1L)).thenReturn(Optional.of(FEEDBACK));
+        when(feedbackRepository.save(FEEDBACK)).thenThrow(RuntimeException.class);
 
         FeedbackRequest request = new FeedbackRequest(1L, null, "abc");
 
@@ -71,6 +62,7 @@ class FeedbackServiceTest {
                 () -> feedbackService.updateFeedback(1L, FEEDBACK_REQUEST )
         ).isInstanceOf(RuntimeException.class);
     }
+  
     @Test
     void findByIdWithExistentIdReturnsFeedback() {
         when(repository.findById(1L)).thenReturn(Optional.of(FEEDBACK));
@@ -79,4 +71,20 @@ class FeedbackServiceTest {
 
         assertThat(sut).isNotNull().isInstanceOf(FeedbackResponse.class).usingRecursiveComparison().isEqualTo(FEEDBACK_RESPONSE);
     }
+  
+    @Test
+    void deleteFeedbackWithExistentIdReturnsSuccess() {
+        when(feedbackRepository.findById(1L)).thenReturn(Optional.of(FEEDBACK));
+        feedbackService.deleteFeedback(1L);
+        verify(feedbackRepository).delete(FEEDBACK);
+    }
+  
+    @Test
+    void deleteFeedbackWithNonExistentIdThrowsException() {
+        when(feedbackRepository.findById(1L)).thenThrow(NotFound.class);
+
+        assertThatThrownBy( () -> feedbackService.deleteFeedback(1L )
+        ).isInstanceOf(NotFound.class);
+    }
+  
 }
