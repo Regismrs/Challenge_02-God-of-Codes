@@ -22,7 +22,8 @@ public class FeedbackController {
     public FeedbackController(FeedbackService feedbackService) {
         this.feedbackService = feedbackService;
     }
-    
+
+
     @GetMapping
     public ResponseEntity<List
             <FeedbackResponse>> getAll() {
@@ -45,4 +46,8 @@ public class FeedbackController {
                 .body(feedbackService.saveFeedback(feedbackRequest));
     }
 
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<FeedbackResponse> getFeedback(@PathVariable("id") Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(feedbackService.findById(id));
+    }
 }

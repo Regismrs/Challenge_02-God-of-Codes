@@ -71,5 +71,12 @@ class FeedbackServiceTest {
                 () -> feedbackService.updateFeedback(1L, FEEDBACK_REQUEST )
         ).isInstanceOf(RuntimeException.class);
     }
+    @Test
+    void findByIdWithExistentIdReturnsFeedback() {
+        when(repository.findById(1L)).thenReturn(Optional.of(FEEDBACK));
 
+        FeedbackResponse sut = feedbackService.findById(1L);
+
+        assertThat(sut).isNotNull().isInstanceOf(FeedbackResponse.class).usingRecursiveComparison().isEqualTo(FEEDBACK_RESPONSE);
+    }
 }

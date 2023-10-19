@@ -50,5 +50,10 @@ public class FeedbackService {
 
         return FeedbackMapper.toDto(feedbackSave);
     }
+    public FeedbackResponse findById(Long id) {
+        Feedback feedback = feedbackRepository.findById(id)
+                .orElseThrow(() -> new NotFound("Feedback not found"));
+        return FeedbackMapper.toDto(feedback);
+    }
 
 }

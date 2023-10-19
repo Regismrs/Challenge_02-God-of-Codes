@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 
 import static com.compassuol.sp.challenge.msfeedback.common.FeedbackConstants.*;
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -58,6 +57,24 @@ class FeedbackControllerTest {
 
         assertThatThrownBy(
                 () -> feedbackController.updateFeedback(1L, FEEDBACK_REQUEST)
+        ).isInstanceOf(NotFound.class);
+
+    }
+    @Test
+    void FeedbackByIdWithExistent() {
+        when(service.findById(1L)).thenReturn(FEEDBACK_RESPONSE);
+
+        ResponseEntity<FeedbackResponse> sut = feedbackController.getFeedback(1L);
+
+        assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(sut.getBody()).isEqualTo(FEEDBACK_RESPONSE);
+    }
+    @Test
+    void FeedbackByIdWithNonExistent() {
+        when(service.findById(1L)).thenThrow(NotFound.class);
+
+        assertThatThrownBy(
+                () -> feedbackController.getFeedback(1L)
         ).isInstanceOf(NotFound.class);
     }
 }
