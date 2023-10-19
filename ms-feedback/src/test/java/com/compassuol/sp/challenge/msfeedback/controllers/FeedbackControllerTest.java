@@ -99,5 +99,22 @@ class FeedbackControllerTest {
         ).isInstanceOf(NotFound.class);
     }
 
+    @Test
+    void createFeedbackWithValidDataReturnProduct() {
+        when(feedbackService.saveFeedback(FEEDBACK_REQUEST)).thenReturn(FEEDBACK_RESPONSE);
 
+        ResponseEntity<FeedbackResponse> sut = feedbackController.createFeedback(FEEDBACK_REQUEST);
+
+        assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(sut.getBody()).isEqualTo(FEEDBACK_RESPONSE);
+    }
+
+    @Test
+    void createFeedbackWithInvalidDataThrowException() {
+        when(feedbackService.saveFeedback(FEEDBACK_REQUEST)).thenThrow(ConstraintViolationException.class);
+
+        assertThatThrownBy(
+                () -> feedbackController.createFeedback(FEEDBACK_REQUEST)
+        ).isInstanceOf(ConstraintViolationException.class);
+    }
 }

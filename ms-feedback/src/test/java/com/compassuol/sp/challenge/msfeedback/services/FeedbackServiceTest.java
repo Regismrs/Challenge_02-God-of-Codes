@@ -2,6 +2,8 @@ package com.compassuol.sp.challenge.msfeedback.services;
 
 import com.compassuol.sp.challenge.msfeedback.domain.dto.FeedbackRequest;
 import com.compassuol.sp.challenge.msfeedback.domain.dto.FeedbackResponse;
+import com.compassuol.sp.challenge.msfeedback.domain.entities.Feedback;
+import com.compassuol.sp.challenge.msfeedback.enums.ScaleEnum;
 import com.compassuol.sp.challenge.msfeedback.exceptions.NotFound;
 import com.compassuol.sp.challenge.msfeedback.repositories.FeedbackRepository;
 import org.junit.jupiter.api.Test;
@@ -85,6 +87,29 @@ class FeedbackServiceTest {
 
         assertThatThrownBy( () -> feedbackService.deleteFeedback(1L )
         ).isInstanceOf(NotFound.class);
+    }
+
+    @Test
+    void createFeedbackWithValidDataReturnProduct() {
+        FeedbackResponse expected =
+                new FeedbackResponse(1L, 1L, ScaleEnum.NEUTRAL, "abc");
+
+        when(feedbackRepository.save(any(Feedback.class))).thenReturn(FEEDBACK);
+
+        FeedbackResponse sut = feedbackService.saveFeedback(FEEDBACK_REQUEST);
+
+        assertThat(sut).isInstanceOf(FeedbackResponse.class);
+        assertThat(sut)
+                .usingRecursiveComparison()
+                .isEqualTo(expected);
+    }
+
+    @Test
+    void createFeedbackWithInvalidDataThrowsException() {
+        when(feedbackRepository.save(INVALID_FEEDBACK)).thenThrow(RuntimeException.class);
+        assertThatThrownBy(
+                () -> feedbackService.saveFeedback(FEEDBACK_REQUEST)
+        ).isInstanceOf(RuntimeException.class);
     }
   
 }
