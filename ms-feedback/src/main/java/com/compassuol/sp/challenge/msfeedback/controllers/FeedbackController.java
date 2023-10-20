@@ -45,8 +45,13 @@ public class FeedbackController {
                 .body(feedbackService.saveFeedback(feedbackRequest));
     }
 
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<FeedbackResponse> getFeedback(@PathVariable("id") Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(feedbackService.findById(id));
+    }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteFeedback(@PathVariable("id") Long id){
+    public ResponseEntity<?> deleteFeedback(@PathVariable("id") Long id){
         feedbackService.deleteFeedback(id);
         return ResponseEntity.status(204).build();
     }
