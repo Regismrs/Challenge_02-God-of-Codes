@@ -87,7 +87,7 @@ class FeedbackControllerTest {
     void deleteFeedbackWithExistentIdReturnsSuccess() {
         Long id = 1L;
         doNothing().when(feedbackService).deleteFeedback(id);
-        ResponseEntity<Object> response = feedbackController.deleteFeedback(id);
+        ResponseEntity<?> response = feedbackController.deleteFeedback(id);
         Assertions.assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         verify(feedbackService).deleteFeedback(id);
     }

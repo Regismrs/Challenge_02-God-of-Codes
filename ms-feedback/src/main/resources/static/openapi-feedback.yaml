@@ -192,23 +192,21 @@ paths:
   
 components:
   schemas:
-    
     FeedbackRequest:
       required:
         - order_id
         - scale
         - comment
-      type: object
       properties:
-        name:
+        order_id:
+          type: integer
+          format: int64
+          example: 1
+        scale:
+          $ref: '#/components/schemas/ScaleEnum'
+        comment:
           type: string
-          example: Feedback 1
-        description:
-          type: string
-          example: Description for feedback 1
-        value:
-          type: number
-          example: 1.11
+          example: "gostei"
     FeedbackResponse:
       required:
         - id
@@ -221,15 +219,15 @@ components:
           type: integer
           format: int64
           example: 10
-        name:
+        order_id:
+          type: integer
+          format: int64
+          example: 1
+        scale:
+          $ref: '#/components/schemas/ScaleEnum'
+        comment:
           type: string
-          example: Feedback 1
-        description:
-          type: string
-          example: Description for feedback 1
-        value:
-          type: number
-          example: 1.11
+          example: "gostei"
     ResponseStatus400:
       type: object
       properties:
@@ -247,6 +245,14 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ResponseDetailsItem'
+    ScaleEnum:
+      type: string
+      enum:
+        - SATISFIED
+        - VERY_SATISFIED
+        - NEUTRAL
+        - DISSATISFIED
+        - VERY_DISSATISFIED
     ResponseStatus404:
       type: object
       properties:

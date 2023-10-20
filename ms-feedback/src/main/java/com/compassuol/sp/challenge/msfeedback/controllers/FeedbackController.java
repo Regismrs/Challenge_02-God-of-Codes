@@ -51,7 +51,7 @@ public class FeedbackController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteFeedback(@PathVariable("id") Long id){
+    public ResponseEntity<?> deleteFeedback(@PathVariable("id") Long id){
         feedbackService.deleteFeedback(id);
         return ResponseEntity.status(204).build();
     }
