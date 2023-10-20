@@ -12,6 +12,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static com.compassuol.sp.challenge.msfeedback.common.FeedbackConstants.*;
@@ -89,6 +92,7 @@ class FeedbackServiceTest {
         ).isInstanceOf(NotFound.class);
     }
 
+
     @Test
     void createFeedbackWithValidDataReturnProduct() {
         FeedbackResponse expected =
@@ -110,6 +114,34 @@ class FeedbackServiceTest {
         assertThatThrownBy(
                 () -> feedbackService.saveFeedback(FEEDBACK_REQUEST)
         ).isInstanceOf(RuntimeException.class);
+
+    @Test
+    void getProductsReturnsEmptyList() {
+        when(feedbackRepository.findAll()).thenReturn(Collections.emptyList());
+
+        List<FeedbackResponse> sut = feedbackService.getAll();
+
+        assertThat(sut).isEmpty();
+    }
+
+    @Test
+    void getFeedbackReturnsAllProducts() {
+        List<Feedback> feedbackList = new ArrayList<>(){
+            {
+                add(FEEDBACK);
+            }
+        };
+        when(feedbackRepository.findAll()).thenReturn(feedbackList);
+        List<FeedbackResponse> sut = feedbackService.getAll();
+
+        assertThat(sut).isNotEmpty();
+        assertThat(sut).hasSize(1);
+
+        assertThat(sut.get(0)).isInstanceOf(FeedbackResponse.class);
+        assertThat(sut.get(0))
+                .usingRecursiveComparison()
+                .isEqualTo(FEEDBACK);
+
     }
   
 }

@@ -14,6 +14,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Collections;
+import java.util.List;
+
 import static com.compassuol.sp.challenge.msfeedback.common.FeedbackConstants.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -107,6 +110,26 @@ class FeedbackControllerTest {
 
         assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(sut.getBody()).isEqualTo(FEEDBACK_RESPONSE);
+    }
+      
+    void getAllFeedbackReturnProductsList() {
+        when(feedbackService.getAll()).thenReturn(FEEDBACK_LIST);
+
+        ResponseEntity<List<FeedbackResponse>> sut = feedbackController.getAll();
+
+        assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(sut.getBody()).hasSize(2);
+        assertThat(sut.getBody().get(0)).isEqualTo(FEEDBACK_RES_DTO1);
+    }
+
+    @Test
+    void getAllFeedbackReturnEmptyList() {
+        when(feedbackService.getAll()).thenReturn(Collections.emptyList());
+
+        ResponseEntity<List<FeedbackResponse>> sut = feedbackController.getAll();
+
+        assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(sut.getBody()).isEmpty();
     }
 
     @Test
