@@ -114,34 +114,33 @@ class FeedbackServiceTest {
         assertThatThrownBy(
                 () -> feedbackService.saveFeedback(FEEDBACK_REQUEST)
         ).isInstanceOf(RuntimeException.class);
-
-    @Test
-    void getProductsReturnsEmptyList() {
-        when(feedbackRepository.findAll()).thenReturn(Collections.emptyList());
-
-        List<FeedbackResponse> sut = feedbackService.getAll();
-
-        assertThat(sut).isEmpty();
     }
+        @Test
+        void getFeedbackReturnsEmptyList() {
+            when(feedbackRepository.findAll()).thenReturn(Collections.emptyList());
 
-    @Test
-    void getFeedbackReturnsAllProducts() {
-        List<Feedback> feedbackList = new ArrayList<>(){
-            {
-                add(FEEDBACK);
-            }
-        };
-        when(feedbackRepository.findAll()).thenReturn(feedbackList);
-        List<FeedbackResponse> sut = feedbackService.getAll();
+            List<FeedbackResponse> sut = feedbackService.getAll();
 
-        assertThat(sut).isNotEmpty();
-        assertThat(sut).hasSize(1);
+            assertThat(sut).isEmpty();
+        }
 
-        assertThat(sut.get(0)).isInstanceOf(FeedbackResponse.class);
-        assertThat(sut.get(0))
-                .usingRecursiveComparison()
-                .isEqualTo(FEEDBACK);
+        @Test
+        void getFeedbackReturnsAll () {
+            List<Feedback> feedbackList = new ArrayList<>() {
+                {
+                    add(FEEDBACK);
+                }
+            };
+            when(feedbackRepository.findAll()).thenReturn(feedbackList);
+            List<FeedbackResponse> sut = feedbackService.getAll();
 
+            assertThat(sut).isNotEmpty();
+            assertThat(sut).hasSize(1);
+
+            assertThat(sut.get(0)).isInstanceOf(FeedbackResponse.class);
+            assertThat(sut.get(0))
+                    .usingRecursiveComparison()
+                    .isEqualTo(FEEDBACK);
+
+        }
     }
-  
-}
