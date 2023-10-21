@@ -32,12 +32,16 @@ public class Order implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    /*
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "orders_products_tb",
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
-    private List<OrderProduct> products = new ArrayList<>();
+    private List<OrderProduct> products = new ArrayList<>();*/
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pedido")
+    private List<OrderProduct> products;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
