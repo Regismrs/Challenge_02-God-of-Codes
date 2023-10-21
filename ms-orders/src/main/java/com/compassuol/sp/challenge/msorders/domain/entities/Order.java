@@ -3,9 +3,7 @@ package com.compassuol.sp.challenge.msorders.domain.entities;
 import com.compassuol.sp.challenge.msorders.enums.PaymentEnum;
 import com.compassuol.sp.challenge.msorders.enums.StatusEnum;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -34,15 +32,15 @@ public class Order implements Serializable {
     private Long id;
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "order_product",
+    @JoinTable(name = "orders_products_tb",
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
     private List<OrderProduct> products;
 
-    private String number;
-
-    private String postalCode;
+    @Embedded
+    @NotEmpty(message = "dop")
+    private Address address;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -58,7 +56,7 @@ public class Order implements Serializable {
     private BigDecimal subTotalValue;
 
     @Column(nullable = false)
-    @Positive
+    @Min(value=0)
     @NotNull
     private BigDecimal discount;
 

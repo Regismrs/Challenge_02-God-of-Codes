@@ -1,6 +1,9 @@
 package com.compassuol.sp.challenge.msorders.domain.dto;
 
-public record AddressViaCepDto(
+import lombok.Getter;
+import lombok.Setter;
+
+public record AddressViaCep(
         String cep,
         String logradouro,
         String bairro,

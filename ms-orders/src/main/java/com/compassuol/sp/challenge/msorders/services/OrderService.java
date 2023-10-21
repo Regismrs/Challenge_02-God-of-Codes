@@ -1,14 +1,11 @@
 package com.compassuol.sp.challenge.msorders.services;
 
-import com.compassuol.sp.challenge.msorders.domain.dto.AddressViaCepDto;
-import com.compassuol.sp.challenge.msorders.domain.dto.OrderRequestDto;
-import com.compassuol.sp.challenge.msorders.domain.dto.OrderResponseDto;
+import com.compassuol.sp.challenge.msorders.domain.dto.*;
 import com.compassuol.sp.challenge.msorders.domain.entities.Order;
+import com.compassuol.sp.challenge.msorders.enums.PaymentEnum;
 import com.compassuol.sp.challenge.msorders.enums.StatusEnum;
 import com.compassuol.sp.challenge.msorders.mapper.OrderMapper;
 import com.compassuol.sp.challenge.msorders.repositories.OrderRepository;
-import com.compassuol.sp.challenge.msorders.services.third.ViaCepService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -16,30 +13,61 @@ import java.math.BigDecimal;
 @Service
 public class OrderService {
 
-    @Autowired
-    OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
+    private final AddressService addressService;
+    private final ProductService productService;
 
-    @Autowired
-    ViaCepService viaCepService;
+    public OrderService(OrderRepository orderRepository,
+                        ProductService productsService,
+                        AddressService addressService) {
 
-    public OrderResponseDto saveOrder(OrderRequestDto orderDto) {
-        Order order = OrderMapper.toModel(orderDto);
-        /**
-         * VALIDACOES
-         */
-        //cep existe?
-        AddressViaCepDto viacepAddress = viaCepService.getAddressByPostalCode(order.getPostalCode());
+        this.orderRepository = orderRepository;
+        this.addressService = addressService;
+        this.productService = productsService;
+    }
 
-        //sets
-        order.setSubTotalValue(BigDecimal.valueOf(100.0));
-        order.setDiscount(BigDecimal.valueOf(0.5));
-        order.setTotalValue(order.getSubTotalValue().multiply(
-                BigDecimal.ONE.subtract(order.getDiscount())));
+    public OrderResponse saveOrder(OrderRequest orderRequest) {
+
+        Order order = new Order();
+
+        order.setAddress(addressService
+                .completeAddressWithAPI(orderRequest));
+
+        order.setProducts(productService
+                .completeProductsDataWithAPI(orderRequest));
+
+        // total produto
+        order.setPaymentMethod( orderRequest.getPaymentMethod() );
+        order.setDiscount( calculateDiscountsPercentage(order) );
+        order.setSubTotalValue( calculateProductTotalValue(order) );
+        order.setTotalValue( calculateTotalWithDiscounts(order));
         order.setStatus(StatusEnum.CONFIRMED);
 
         //save
         Order saved = orderRepository.save(order);
 
-        return OrderMapper.toDto(saved, viacepAddress);
+        return OrderMapper.toDto(saved);
+
     }
+
+    private BigDecimal calculateTotalWithDiscounts(Order order) {
+        return order.getSubTotalValue().multiply(
+                        BigDecimal.ONE.subtract(order.getDiscount())
+                );
+    }
+
+    private BigDecimal calculateProductTotalValue(Order order) {
+        return order.getProducts().stream()
+                .map(p -> p.getValue().multiply(BigDecimal.valueOf(p.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    private BigDecimal calculateDiscountsPercentage(Order order) {
+        if (PaymentEnum.PIX == order.getPaymentMethod()) {
+            return BigDecimal.valueOf(0.05);
+        } else {
+            return BigDecimal.ZERO;
+        }
+    }
+
 }

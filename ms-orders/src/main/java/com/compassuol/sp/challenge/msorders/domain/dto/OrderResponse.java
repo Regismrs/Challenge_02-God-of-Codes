@@ -1,8 +1,8 @@
 package com.compassuol.sp.challenge.msorders.domain.dto;
 
-import com.compassuol.sp.challenge.msorders.domain.entities.OrderProduct;
 import com.compassuol.sp.challenge.msorders.enums.PaymentEnum;
 import com.compassuol.sp.challenge.msorders.enums.StatusEnum;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -14,23 +14,24 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderResponseDto {
+public class OrderResponse {
 
     private Long id;
 
-    private List<ProductRequestDto> products;
+    private List<ProductResponse> products;
 
-    private AddressResponseDto addressResponseDto;
+    @JsonProperty("address")
+    private AddressResponse addressResponse;
 
-    //nome = payment_method
+    @JsonProperty("payment_method")
     private PaymentEnum paymentMethod;
 
-    //nome = subtotal_value
+    @JsonProperty("subtotal_value")
     private BigDecimal subtotalValue;
 
     private BigDecimal discount;
 
-    //nome = total_value
+    @JsonProperty("total_value")
     private BigDecimal totalValue;
 
     private StatusEnum status;

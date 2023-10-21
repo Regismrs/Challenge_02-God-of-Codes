@@ -2,10 +2,9 @@ package com.compassuol.sp.challenge.msorders.domain.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -23,6 +22,8 @@ public class OrderProduct {
 
     @Min(value = 1)
     private Integer quantity;
+
+    private BigDecimal value;
 
     public OrderProduct(Long productId, Integer quantity) {
         this.productId = productId;

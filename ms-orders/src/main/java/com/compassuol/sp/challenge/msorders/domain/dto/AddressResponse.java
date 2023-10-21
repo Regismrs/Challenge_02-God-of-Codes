@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddressResponseDto {
+public class AddressResponse {
     private String street;
     private String number;
     private String complement;
