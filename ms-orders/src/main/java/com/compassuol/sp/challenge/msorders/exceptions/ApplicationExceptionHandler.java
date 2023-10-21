@@ -4,9 +4,11 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.ServletRequestBindingException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.sql.SQLClientInfoException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,7 +69,7 @@ public class ApplicationExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(RuntimeException.class)
+    @ExceptionHandler(ServletRequestBindingException.class)
     public ExceptionsResponse handleAllException(){
 
         return new ExceptionsResponse(

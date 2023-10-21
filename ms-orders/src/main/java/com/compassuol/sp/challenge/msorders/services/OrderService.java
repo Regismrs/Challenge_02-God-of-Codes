@@ -1,14 +1,20 @@
 package com.compassuol.sp.challenge.msorders.services;
 
-import com.compassuol.sp.challenge.msorders.domain.dto.*;
+import com.compassuol.sp.challenge.msorders.domain.dto.OrderCancelResponse;
+import com.compassuol.sp.challenge.msorders.domain.dto.OrderRequest;
+import com.compassuol.sp.challenge.msorders.domain.dto.OrderResponse;
 import com.compassuol.sp.challenge.msorders.domain.entities.Order;
 import com.compassuol.sp.challenge.msorders.enums.PaymentEnum;
 import com.compassuol.sp.challenge.msorders.enums.StatusEnum;
+import com.compassuol.sp.challenge.msorders.exceptions.BusinessException;
+import com.compassuol.sp.challenge.msorders.exceptions.NotFound;
 import com.compassuol.sp.challenge.msorders.mapper.OrderMapper;
 import com.compassuol.sp.challenge.msorders.repositories.OrderRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Service
 public class OrderService {
@@ -37,10 +43,10 @@ public class OrderService {
                 .completeProductsDataWithAPI(orderRequest));
 
         // total produto
-        order.setPaymentMethod( orderRequest.getPaymentMethod() );
-        order.setDiscount( calculateDiscountsPercentage(order) );
-        order.setSubTotalValue( calculateProductTotalValue(order) );
-        order.setTotalValue( calculateTotalWithDiscounts(order));
+        order.setPaymentMethod(orderRequest.getPaymentMethod());
+        order.setDiscount(calculateDiscountsPercentage(order));
+        order.setSubTotalValue(calculateProductTotalValue(order));
+        order.setTotalValue(calculateTotalWithDiscounts(order));
         order.setStatus(StatusEnum.CONFIRMED);
 
         //save
@@ -50,10 +56,41 @@ public class OrderService {
 
     }
 
+    public OrderCancelResponse cancelOrder(Long id, String cancelReason) {
+
+        Order canceledOrder = orderRepository.findById(id).orElseThrow(() -> new NotFound("Order " + id + " Not Found"));
+
+        LocalDateTime startDate = canceledOrder.getCreatedDate();
+        LocalDateTime currentDate = LocalDateTime.now();
+
+        long daysDifference = ChronoUnit.DAYS.between(startDate, currentDate);
+
+        try {
+            if (canceledOrder.getStatus() == StatusEnum.SENT) {
+                throw new BusinessException("Can't cancel orders with status SENT");
+            } else if (canceledOrder.getStatus() == StatusEnum.CANCELED) {
+                throw new BusinessException("Order already canceled");
+            } else if (daysDifference > 90) {
+                throw new BusinessException("Can't cancel Orders older than 90 days from creation.");
+            }
+        } catch (BusinessException ex) {
+            throw ex;
+        }
+
+
+        canceledOrder.setCancelReason(cancelReason);
+        canceledOrder.setCancelDate(LocalDateTime.now());
+        canceledOrder.setStatus(StatusEnum.CANCELED);
+
+        orderRepository.save(canceledOrder);
+
+        return OrderMapper.toCancelDto(canceledOrder);
+    }
+
     private BigDecimal calculateTotalWithDiscounts(Order order) {
         return order.getSubTotalValue().multiply(
-                        BigDecimal.ONE.subtract(order.getDiscount())
-                );
+                BigDecimal.ONE.subtract(order.getDiscount())
+        );
     }
 
     private BigDecimal calculateProductTotalValue(Order order) {
@@ -69,5 +106,6 @@ public class OrderService {
             return BigDecimal.ZERO;
         }
     }
+
 
 }
