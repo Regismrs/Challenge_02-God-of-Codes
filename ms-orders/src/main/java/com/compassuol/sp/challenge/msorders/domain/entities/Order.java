@@ -67,7 +67,6 @@ public class Order implements Serializable {
     @NotNull
     private BigDecimal totalValue;
 
-    @NotEmpty
     private String cancelReason;
 
     @CreationTimestamp

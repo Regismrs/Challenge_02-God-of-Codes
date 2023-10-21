@@ -24,7 +24,7 @@ public class OrderController {
                 .body(orderService.saveOrder(orderDto));
     }
 
-    @PostMapping("off/{id}/cancel")
+    @PostMapping(path = "{id}/cancel")
     public ResponseEntity<OrderCancelResponse> cancelOrder(
             @PathVariable("id") Long id,
             @Valid @RequestBody OrderCancelRequest cancelReason) {
