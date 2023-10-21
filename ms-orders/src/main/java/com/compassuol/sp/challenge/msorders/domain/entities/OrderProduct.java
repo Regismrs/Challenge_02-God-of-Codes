@@ -23,6 +23,9 @@ public class OrderProduct {
     @Column(name="product_id", nullable = false)
     private Long productId;
 
+    @ManyToOne
+    private Order order;
+
     @Min(value = 1)
     private Integer quantity;
 

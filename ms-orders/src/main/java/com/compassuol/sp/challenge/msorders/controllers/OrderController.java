@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,7 +20,8 @@ public class OrderController {
     private OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest orderDto) {
+    public ResponseEntity<OrderResponse> createOrder(
+            @RequestBody OrderRequest orderDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(orderService.saveOrder(orderDto));
     }
@@ -31,6 +33,15 @@ public class OrderController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(orderService.cancelOrder(id, cancelReason.getCancelReason()));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<OrderResponse> updateOrder(
+            @PathVariable("id") Long id,
+            @Valid @RequestBody OrderRequest orderDto) {
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(orderService.updateOrder(id, orderDto));
     }
 
 }

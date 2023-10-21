@@ -19,7 +19,6 @@ import lombok.*;
 @Valid
 public class Address {
     private String street;
-    @Column(nullable = false)
     private String number;
     private String complement;
     private String city;

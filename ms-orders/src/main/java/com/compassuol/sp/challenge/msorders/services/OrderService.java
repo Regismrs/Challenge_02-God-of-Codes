@@ -4,16 +4,21 @@ import com.compassuol.sp.challenge.msorders.domain.dto.OrderCancelResponse;
 import com.compassuol.sp.challenge.msorders.domain.dto.OrderRequest;
 import com.compassuol.sp.challenge.msorders.domain.dto.OrderResponse;
 import com.compassuol.sp.challenge.msorders.domain.entities.Order;
+import com.compassuol.sp.challenge.msorders.domain.entities.OrderProduct;
 import com.compassuol.sp.challenge.msorders.enums.PaymentEnum;
 import com.compassuol.sp.challenge.msorders.enums.StatusEnum;
 import com.compassuol.sp.challenge.msorders.exceptions.BusinessException;
 import com.compassuol.sp.challenge.msorders.exceptions.NotFound;
+import com.compassuol.sp.challenge.msorders.exceptions.NotFound;
 import com.compassuol.sp.challenge.msorders.mapper.OrderMapper;
 import com.compassuol.sp.challenge.msorders.repositories.OrderRepository;
 import org.bouncycastle.oer.Switch;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Collection;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
@@ -44,10 +49,35 @@ public class OrderService {
                 .completeProductsDataWithAPI(orderRequest));
 
         // total produto
-        order.setPaymentMethod(orderRequest.getPaymentMethod());
-        order.setDiscount(calculateDiscountsPercentage(order));
-        order.setSubTotalValue(calculateProductTotalValue(order));
-        order.setTotalValue(calculateTotalWithDiscounts(order));
+        order.setPaymentMethod( orderRequest.getPaymentMethod() );
+        order.setDiscount( calculateDiscountsPercentage(order) );
+        order.setSubTotalValue( calculateProductTotalValue(order) );
+        order.setTotalValue( calculateTotalWithDiscounts(order));
+        order.setStatus(StatusEnum.CONFIRMED);
+
+        //save
+        Order saved = orderRepository.save(order);
+
+        return OrderMapper.toDto(saved);
+    }
+
+    @Transactional
+    public OrderResponse updateOrder(Long id, OrderRequest orderRequest) {
+
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new NotFound("Not Found Order"));
+
+        order.setAddress(addressService
+                .completeAddressWithAPI(orderRequest));
+
+        order.setProducts(productService
+                .completeProductsDataWithAPI(orderRequest));
+
+        // total produto
+        order.setPaymentMethod( orderRequest.getPaymentMethod() );
+        order.setDiscount( calculateDiscountsPercentage(order) );
+        order.setSubTotalValue( calculateProductTotalValue(order) );
+        order.setTotalValue( calculateTotalWithDiscounts(order));
         order.setStatus(StatusEnum.CONFIRMED);
 
         //save
@@ -77,8 +107,8 @@ public class OrderService {
 
     private BigDecimal calculateTotalWithDiscounts(Order order) {
         return order.getSubTotalValue().multiply(
-                BigDecimal.ONE.subtract(order.getDiscount())
-        );
+                        BigDecimal.ONE.subtract(order.getDiscount())
+                ).setScale(2, RoundingMode.HALF_UP);
     }
 
     private BigDecimal calculateProductTotalValue(Order order) {
