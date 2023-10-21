@@ -10,6 +10,7 @@ import com.compassuol.sp.challenge.msorders.exceptions.BusinessException;
 import com.compassuol.sp.challenge.msorders.exceptions.NotFound;
 import com.compassuol.sp.challenge.msorders.mapper.OrderMapper;
 import com.compassuol.sp.challenge.msorders.repositories.OrderRepository;
+import org.bouncycastle.oer.Switch;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -56,33 +57,20 @@ public class OrderService {
 
     }
 
-    public OrderCancelResponse cancelOrder(Long id, String cancelReason) {
+    public OrderCancelResponse cancelOrder(Long id, String cancelReason)
+        throws BusinessException {
 
-        Order canceledOrder = orderRepository.findById(id).orElseThrow(() -> new NotFound("Order " + id + " Not Found"));
+        Order canceledOrder = orderRepository.findById(id)
+                .orElseThrow(() -> new NotFound("Order " + id + " Not Found"));
 
-        LocalDateTime startDate = canceledOrder.getCreatedDate();
-        LocalDateTime currentDate = LocalDateTime.now();
+        if (isOrderCancellable(canceledOrder).equals(Boolean.TRUE)) {
+            // can cancel...
+            canceledOrder.setCancelReason(cancelReason);
+            canceledOrder.setCancelDate(LocalDateTime.now());
+            canceledOrder.setStatus(StatusEnum.CANCELED);
 
-        long daysDifference = ChronoUnit.DAYS.between(startDate, currentDate);
-
-        try {
-            if (canceledOrder.getStatus() == StatusEnum.SENT) {
-                throw new BusinessException("Can't cancel orders with status SENT");
-            } else if (canceledOrder.getStatus() == StatusEnum.CANCELED) {
-                throw new BusinessException("Order already canceled");
-            } else if (daysDifference > 90) {
-                throw new BusinessException("Can't cancel Orders older than 90 days from creation.");
-            }
-        } catch (BusinessException ex) {
-            throw ex;
+            orderRepository.save(canceledOrder);
         }
-
-
-        canceledOrder.setCancelReason(cancelReason);
-        canceledOrder.setCancelDate(LocalDateTime.now());
-        canceledOrder.setStatus(StatusEnum.CANCELED);
-
-        orderRepository.save(canceledOrder);
 
         return OrderMapper.toCancelDto(canceledOrder);
     }
@@ -105,6 +93,20 @@ public class OrderService {
         } else {
             return BigDecimal.ZERO;
         }
+    }
+
+    private Boolean isOrderCancellable(Order order) throws BusinessException{
+        // today - createdDay
+        long daysDifference = ChronoUnit.DAYS.between(order.getCreatedDate(), LocalDateTime.now());
+        if (daysDifference > 90) {
+            throw new BusinessException("Can't cancel Orders older than 90 days from creation.");
+        } else if (order.getStatus().equals(StatusEnum.SENT)) {
+            throw new BusinessException("Can't cancel orders with status SENT");
+        } else if (order.getStatus().equals(StatusEnum.CANCELED)) {
+            throw new BusinessException("Order already canceled");
+        }
+
+        return true;
     }
 
 

@@ -1,5 +1,6 @@
 package com.compassuol.sp.challenge.msorders.domain.dto;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
@@ -8,6 +9,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Valid
 public class OrderCancelRequest {
 
     @NotBlank

@@ -19,13 +19,16 @@ public class OrderController {
     private OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<OrderResponse> createOrder(@Valid @RequestBody OrderRequest orderDto) {
+    public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest orderDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(orderService.saveOrder(orderDto));
     }
 
-    @PostMapping("{id}/cancel")
-    public ResponseEntity<OrderCancelResponse> cancelOrder(@Valid @PathVariable Long id, @RequestBody OrderCancelRequest cancelReason) {
+    @PostMapping("off/{id}/cancel")
+    public ResponseEntity<OrderCancelResponse> cancelOrder(
+            @PathVariable("id") Long id,
+            @Valid @RequestBody OrderCancelRequest cancelReason) {
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(orderService.cancelOrder(id, cancelReason.getCancelReason()));
     }
