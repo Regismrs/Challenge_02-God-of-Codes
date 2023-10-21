@@ -1,7 +1,6 @@
 package com.compassuol.sp.challenge.msorders.services.third;
 
 import com.compassuol.sp.challenge.msorders.domain.dto.ProductMicroservice;
-import com.compassuol.sp.challenge.msorders.domain.entities.OrderProduct;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

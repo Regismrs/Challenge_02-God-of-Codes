@@ -3,7 +3,10 @@ package com.compassuol.sp.challenge.msorders.domain.entities;
 import com.compassuol.sp.challenge.msorders.enums.PaymentEnum;
 import com.compassuol.sp.challenge.msorders.enums.StatusEnum;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -63,6 +66,9 @@ public class Order implements Serializable {
     @Positive
     @NotNull
     private BigDecimal totalValue;
+
+    @NotEmpty
+    private String cancelReason;
 
     @CreationTimestamp
     private LocalDateTime createdDate;

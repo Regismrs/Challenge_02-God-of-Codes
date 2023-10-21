@@ -3,8 +3,8 @@ package com.compassuol.sp.challenge.msorders.mapper;
 
 import com.compassuol.sp.challenge.msorders.domain.dto.*;
 import com.compassuol.sp.challenge.msorders.domain.entities.Address;
-import com.compassuol.sp.challenge.msorders.domain.entities.OrderProduct;
 import com.compassuol.sp.challenge.msorders.domain.entities.Order;
+import com.compassuol.sp.challenge.msorders.domain.entities.OrderProduct;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -28,7 +28,23 @@ public class OrderMapper {
                 .build();
     }
 
-    // mapeia productRequest + productMicroservice = OrderProduct
+    public static OrderCancelResponse toCancelDto(Order order){
+
+        return OrderCancelResponse
+                .builder()
+                .id(order.getId())
+                .products( orderProductsToProductsResponse(order.getProducts()) )
+                .addressResponse( addressToDto(order.getAddress()) )
+                .paymentMethod(order.getPaymentMethod())
+                .subtotalValue(order.getSubTotalValue())
+                .discount(order.getDiscount())
+                .totalValue(order.getTotalValue())
+                .createdDate(order.getCreatedDate())
+                .status(order.getStatus())
+                .cancelReason(order.getCancelReason())
+                .cancelDate(order.getCancelDate())
+                .build();
+    }
     public static OrderProduct requestPlusProductMicroserviceToModel(
                 ProductRequest request,
                 ProductMicroservice productMicroservice) {
@@ -40,7 +56,6 @@ public class OrderMapper {
         return product;
     }
 
-    // mapeia os produtos da tabela para produtos da resposta
     private static List<ProductResponse> orderProductsToProductsResponse(
             List<OrderProduct> orderProducts) {
 
@@ -49,7 +64,6 @@ public class OrderMapper {
         ).toList();
     }
 
-    // mapeia do order para o endereco da resposta
     private static AddressResponse addressToDto(Address address) {
         return AddressResponse
                 .builder()
