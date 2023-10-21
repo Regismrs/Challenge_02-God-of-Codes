@@ -2,13 +2,17 @@ package com.compassuol.sp.challenge.msorders.services;
 
 import com.compassuol.sp.challenge.msorders.domain.dto.*;
 import com.compassuol.sp.challenge.msorders.domain.entities.Order;
+import com.compassuol.sp.challenge.msorders.domain.entities.OrderProduct;
 import com.compassuol.sp.challenge.msorders.enums.PaymentEnum;
 import com.compassuol.sp.challenge.msorders.enums.StatusEnum;
+import com.compassuol.sp.challenge.msorders.exceptions.NotFound;
 import com.compassuol.sp.challenge.msorders.mapper.OrderMapper;
 import com.compassuol.sp.challenge.msorders.repositories.OrderRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 
 @Service
 public class OrderService {
@@ -29,6 +33,31 @@ public class OrderService {
     public OrderResponse saveOrder(OrderRequest orderRequest) {
 
         Order order = new Order();
+
+        order.setAddress(addressService
+                .completeAddressWithAPI(orderRequest));
+
+        order.setProducts(productService
+                .completeProductsDataWithAPI(orderRequest));
+
+        // total produto
+        order.setPaymentMethod( orderRequest.getPaymentMethod() );
+        order.setDiscount( calculateDiscountsPercentage(order) );
+        order.setSubTotalValue( calculateProductTotalValue(order) );
+        order.setTotalValue( calculateTotalWithDiscounts(order));
+        order.setStatus(StatusEnum.CONFIRMED);
+
+        //save
+        Order saved = orderRepository.save(order);
+
+        return OrderMapper.toDto(saved);
+    }
+
+    @Transactional
+    public OrderResponse updateOrder(Long id, OrderRequest orderRequest) {
+
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new NotFound("Not Found Order"));
 
         order.setAddress(addressService
                 .completeAddressWithAPI(orderRequest));

@@ -18,9 +18,20 @@ public class OrderController {
     private OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<OrderResponse> createOrder(@Valid @RequestBody OrderRequest orderDto) {
+    public ResponseEntity<OrderResponse> createOrder(
+            @Valid @RequestBody OrderRequest orderDto) {
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(orderService.saveOrder(orderDto));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<OrderResponse> updateOrder(
+            @PathVariable(name = "id") Long id,
+            @Valid @RequestBody OrderRequest orderDto) {
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(orderService.updateOrder(id, orderDto));
     }
 
 }

@@ -20,6 +20,13 @@ public class OrderProduct {
     @Column(name="product_id", nullable = false)
     private Long productId;
 
+    @ManyToOne(cascade = CascadeType.REFRESH)
+    @JoinTable(name = "orders_products_tb",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "order_id")
+    )
+    private Order order;
+
     @Min(value = 1)
     private Integer quantity;
 

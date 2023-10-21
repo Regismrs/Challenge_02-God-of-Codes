@@ -12,6 +12,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Builder
@@ -36,10 +37,7 @@ public class Order implements Serializable {
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
-    private List<OrderProduct> products;
-
-    @Embedded
-    private Address address;
+    private List<OrderProduct> products = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -64,6 +62,17 @@ public class Order implements Serializable {
     @NotNull
     private BigDecimal totalValue;
 
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "street", column = @Column(name = "address_street")),
+            @AttributeOverride(name = "number", column = @Column(name = "address_number")),
+            @AttributeOverride(name = "complement", column = @Column(name = "address_complement")),
+            @AttributeOverride(name = "city", column = @Column(name = "address_city")),
+            @AttributeOverride(name = "state", column = @Column(name = "address_state")),
+            @AttributeOverride(name = "postalCode", column = @Column(name = "address_postal_code"))
+    })
+    private Address address;
+
     @CreationTimestamp
     private LocalDateTime createdDate;
 
@@ -71,4 +80,10 @@ public class Order implements Serializable {
     private LocalDateTime updatedDate;
 
     private LocalDateTime cancelDate;
+
+    public void setProducts(List<OrderProduct> products) {
+        // cuz update...
+        this.products.clear();
+        this.products.addAll(products);
+    }
 }
