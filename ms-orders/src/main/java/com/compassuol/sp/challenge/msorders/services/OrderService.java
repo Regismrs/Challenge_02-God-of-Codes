@@ -1,18 +1,25 @@
 package com.compassuol.sp.challenge.msorders.services;
 
-import com.compassuol.sp.challenge.msorders.domain.dto.*;
+import com.compassuol.sp.challenge.msorders.domain.dto.OrderCancelResponse;
+import com.compassuol.sp.challenge.msorders.domain.dto.OrderRequest;
+import com.compassuol.sp.challenge.msorders.domain.dto.OrderResponse;
 import com.compassuol.sp.challenge.msorders.domain.entities.Order;
 import com.compassuol.sp.challenge.msorders.domain.entities.OrderProduct;
 import com.compassuol.sp.challenge.msorders.enums.PaymentEnum;
 import com.compassuol.sp.challenge.msorders.enums.StatusEnum;
+import com.compassuol.sp.challenge.msorders.exceptions.BusinessException;
+import com.compassuol.sp.challenge.msorders.exceptions.NotFound;
 import com.compassuol.sp.challenge.msorders.exceptions.NotFound;
 import com.compassuol.sp.challenge.msorders.mapper.OrderMapper;
 import com.compassuol.sp.challenge.msorders.repositories.OrderRepository;
+import org.bouncycastle.oer.Switch;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Service
 public class OrderService {
@@ -79,6 +86,24 @@ public class OrderService {
 
     }
 
+    public OrderCancelResponse cancelOrder(Long id, String cancelReason)
+        throws BusinessException {
+
+        Order canceledOrder = orderRepository.findById(id)
+                .orElseThrow(() -> new NotFound("Order " + id + " Not Found"));
+
+        if (isOrderCancellable(canceledOrder).equals(Boolean.TRUE)) {
+            // can cancel...
+            canceledOrder.setCancelReason(cancelReason);
+            canceledOrder.setCancelDate(LocalDateTime.now());
+            canceledOrder.setStatus(StatusEnum.CANCELED);
+
+            orderRepository.save(canceledOrder);
+        }
+
+        return OrderMapper.toCancelDto(canceledOrder);
+    }
+
     private BigDecimal calculateTotalWithDiscounts(Order order) {
         return order.getSubTotalValue().multiply(
                         BigDecimal.ONE.subtract(order.getDiscount())
@@ -98,5 +123,20 @@ public class OrderService {
             return BigDecimal.ZERO;
         }
     }
+
+    private Boolean isOrderCancellable(Order order) throws BusinessException{
+        // today - createdDay
+        long daysDifference = ChronoUnit.DAYS.between(order.getCreatedDate(), LocalDateTime.now());
+        if (daysDifference > 90) {
+            throw new BusinessException("Can't cancel Orders older than 90 days from creation.");
+        } else if (order.getStatus().equals(StatusEnum.SENT)) {
+            throw new BusinessException("Can't cancel orders with status SENT");
+        } else if (order.getStatus().equals(StatusEnum.CANCELED)) {
+            throw new BusinessException("Order already canceled");
+        }
+
+        return true;
+    }
+
 
 }

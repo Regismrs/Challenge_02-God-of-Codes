@@ -3,7 +3,10 @@ package com.compassuol.sp.challenge.msorders.domain.entities;
 import com.compassuol.sp.challenge.msorders.enums.PaymentEnum;
 import com.compassuol.sp.challenge.msorders.enums.StatusEnum;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -32,8 +35,7 @@ public class Order implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    /*
-    @ManyToMany(cascade = CascadeType.ALL)
+    /*@ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "orders_products_tb",
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
@@ -76,6 +78,8 @@ public class Order implements Serializable {
             @AttributeOverride(name = "postalCode", column = @Column(name = "address_postal_code"))
     })
     private Address address;
+
+    private String cancelReason;
 
     @CreationTimestamp
     private LocalDateTime createdDate;

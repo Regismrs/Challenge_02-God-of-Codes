@@ -1,5 +1,7 @@
 package com.compassuol.sp.challenge.msorders.controllers;
 
+import com.compassuol.sp.challenge.msorders.domain.dto.OrderCancelRequest;
+import com.compassuol.sp.challenge.msorders.domain.dto.OrderCancelResponse;
 import com.compassuol.sp.challenge.msorders.domain.dto.OrderRequest;
 import com.compassuol.sp.challenge.msorders.domain.dto.OrderResponse;
 import com.compassuol.sp.challenge.msorders.services.OrderService;
@@ -19,10 +21,18 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<OrderResponse> createOrder(
-            @Valid @RequestBody OrderRequest orderDto) {
-
+            @RequestBody OrderRequest orderDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(orderService.saveOrder(orderDto));
+    }
+
+    @PostMapping(path = "{id}/cancel")
+    public ResponseEntity<OrderCancelResponse> cancelOrder(
+            @PathVariable("id") Long id,
+            @Valid @RequestBody OrderCancelRequest cancelReason) {
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(orderService.cancelOrder(id, cancelReason.getCancelReason()));
     }
 
     @PutMapping("/{id}")
