@@ -42,7 +42,7 @@ public class Order implements Serializable {
     )
     private List<OrderProduct> products = new ArrayList<>();*/
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pedido")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
     private List<OrderProduct> products;
 
     @Enumerated(EnumType.STRING)
@@ -91,7 +91,11 @@ public class Order implements Serializable {
 
     public void setProducts(List<OrderProduct> products) {
         // cuz update...
-        this.products.clear();
+        if (this.products == null) {
+            this.products = new ArrayList<>();
+        } else {
+            this.products.clear();
+        }
         this.products.addAll(products);
     }
 }
