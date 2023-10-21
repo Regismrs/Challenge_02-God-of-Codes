@@ -14,6 +14,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Collections;
+import java.util.List;
+
 import static com.compassuol.sp.challenge.msfeedback.common.FeedbackConstants.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -60,13 +63,31 @@ class FeedbackControllerTest {
         assertThatThrownBy(
                 () -> feedbackController.updateFeedback(1L, FEEDBACK_REQUEST)
         ).isInstanceOf(NotFound.class);
+
+    }
+    @Test
+    void FeedbackByIdWithExistent() {
+        when(feedbackService.findById(1L)).thenReturn(FEEDBACK_RESPONSE);
+
+        ResponseEntity<FeedbackResponse> sut = feedbackController.getFeedback(1L);
+
+        assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(sut.getBody()).isEqualTo(FEEDBACK_RESPONSE);
+    }
+    @Test
+    void FeedbackByIdWithNonExistent() {
+        when(feedbackService.findById(1L)).thenThrow(NotFound.class);
+
+        assertThatThrownBy(
+                () -> feedbackController.getFeedback(1L)
+        ).isInstanceOf(NotFound.class);
     }
 
     @Test
     void deleteFeedbackWithExistentIdReturnsSuccess() {
         Long id = 1L;
         doNothing().when(feedbackService).deleteFeedback(id);
-        ResponseEntity<Object> response = feedbackController.deleteFeedback(id);
+        ResponseEntity<?> response = feedbackController.deleteFeedback(id);
         Assertions.assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         verify(feedbackService).deleteFeedback(id);
     }
@@ -81,5 +102,42 @@ class FeedbackControllerTest {
         ).isInstanceOf(NotFound.class);
     }
 
+    @Test
+    void createFeedbackWithValidDataReturnProduct() {
+        when(feedbackService.saveFeedback(FEEDBACK_REQUEST)).thenReturn(FEEDBACK_RESPONSE);
 
+        ResponseEntity<FeedbackResponse> sut = feedbackController.createFeedback(FEEDBACK_REQUEST);
+
+        assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(sut.getBody()).isEqualTo(FEEDBACK_RESPONSE);
+    }
+      
+    void getAllFeedbackReturnProductsList() {
+        when(feedbackService.getAll()).thenReturn(FEEDBACK_LIST);
+
+        ResponseEntity<List<FeedbackResponse>> sut = feedbackController.getAll();
+
+        assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(sut.getBody()).hasSize(2);
+        assertThat(sut.getBody().get(0)).isEqualTo(FEEDBACK_RES_DTO1);
+    }
+
+    @Test
+    void getAllFeedbackReturnEmptyList() {
+        when(feedbackService.getAll()).thenReturn(Collections.emptyList());
+
+        ResponseEntity<List<FeedbackResponse>> sut = feedbackController.getAll();
+
+        assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(sut.getBody()).isEmpty();
+    }
+
+    @Test
+    void createFeedbackWithInvalidDataThrowException() {
+        when(feedbackService.saveFeedback(FEEDBACK_REQUEST)).thenThrow(ConstraintViolationException.class);
+
+        assertThatThrownBy(
+                () -> feedbackController.createFeedback(FEEDBACK_REQUEST)
+        ).isInstanceOf(ConstraintViolationException.class);
+    }
 }

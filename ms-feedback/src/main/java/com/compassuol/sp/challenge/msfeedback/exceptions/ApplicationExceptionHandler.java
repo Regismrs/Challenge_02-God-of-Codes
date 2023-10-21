@@ -39,7 +39,7 @@ public class ApplicationExceptionHandler {
         return new ExceptionsResponse(
                 400,
                 "Bad Request",
-                "product name need to be an unique value",
+                "invalid data",
                 new ArrayList<>()
         );
     }
