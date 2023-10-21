@@ -39,7 +39,6 @@ public class Order implements Serializable {
     private List<OrderProduct> products;
 
     @Embedded
-    @NotEmpty(message = "dop")
     private Address address;
 
     @Enumerated(EnumType.STRING)

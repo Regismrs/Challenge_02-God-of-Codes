@@ -2,6 +2,7 @@ package com.compassuol.sp.challenge.msorders.domain.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -10,6 +11,7 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
+@Valid
 public class Address {
     private String street;
     @Column(nullable = false)

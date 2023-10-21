@@ -2,8 +2,10 @@ package com.compassuol.sp.challenge.msorders.exceptions;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLClientInfoException;
@@ -13,39 +15,64 @@ import java.util.List;
 @RestControllerAdvice
 public class ApplicationExceptionHandler {
 
+    // entity validations
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({ConstraintViolationException.class})
     public ExceptionsResponse handleExceptionsBadRequest(ConstraintViolationException e){
 
-        List<FieldError> details = new ArrayList<>();
+        List<FieldErrorRecord> details = new ArrayList<>();
 
         for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
             String field = violation.getPropertyPath().toString();
             String message = violation.getMessage();
-            details.add(new FieldError(field, message));
+            details.add(new FieldErrorRecord(field, message));
+
         }
 
         return new ExceptionsResponse(
                 400,
-                "Bad Request",
+                HttpStatus.BAD_REQUEST.name(),
                 "Invalid request",
                 details
         );
     }
 
+    // dtos validations
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ExceptionsResponse handleSQLExceptionsBadRequest(){
+    @ExceptionHandler({MethodArgumentNotValidException.class})
+    public ExceptionsResponse handleExceptionsBadRequest(MethodArgumentNotValidException e){
+        List<FieldErrorRecord> details = new ArrayList<>();
+
+        for (FieldError violation : e.getBindingResult().getFieldErrors()) {
+            String field = violation.getField().replace("Request", "");
+            String message = violation.getDefaultMessage();
+            details.add(new FieldErrorRecord(field, message));
+        }
+
         return new ExceptionsResponse(
                 400,
-                "Bad Request",
-                "product name need to be an unique value",
+                HttpStatus.BAD_REQUEST.name(),
+                "Invalid request",
+                details
+        );
+    }
+
+    // enum invalid value
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({HttpMessageNotReadableException.class})
+    public ExceptionsResponse handleBusinessException(HttpMessageNotReadableException e){
+        String usefullMessage = e.getMessage().split("String")[1];
+        return new ExceptionsResponse(
+                400,
+                HttpStatus.BAD_REQUEST.name(),
+                usefullMessage,
                 new ArrayList<>()
         );
     }
 
+    // our errors
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(BusinessException.class)
+    @ExceptionHandler({BusinessException.class})
     public ExceptionsResponse handleBusinessException(BusinessException e){
         return new ExceptionsResponse(
                 400,
@@ -67,7 +94,8 @@ public class ApplicationExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(RuntimeException.class)
+    //@ExceptionHandler(RuntimeException.class)
+    @ExceptionHandler(SQLClientInfoException.class)
     public ExceptionsResponse handleAllException(){
 
         return new ExceptionsResponse(
