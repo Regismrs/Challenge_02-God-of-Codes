@@ -31,11 +31,11 @@ class FeedbackControllerTest {
     @Test
     void updateFeedbackWithValidDataReturnFeedback() {
         FeedbackResponse expected = new FeedbackResponse(
-                    FEEDBACK_RESPONSE.getId(),
-                    FEEDBACK_RESPONSE.getOrderId(),
-                    FEEDBACK_RESPONSE.getScale(),
-                    FEEDBACK_RESPONSE.getComment()
-                );
+                FEEDBACK_RESPONSE.getId(),
+                FEEDBACK_RESPONSE.getOrderId(),
+                FEEDBACK_RESPONSE.getScale(),
+                FEEDBACK_RESPONSE.getComment()
+        );
 
         when(feedbackService.updateFeedback(1L, FEEDBACK_REQUEST)).thenReturn(FEEDBACK_RESPONSE);
 
@@ -111,7 +111,7 @@ class FeedbackControllerTest {
         assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(sut.getBody()).isEqualTo(FEEDBACK_RESPONSE);
     }
-      
+
     void getAllFeedbackReturnProductsList() {
         when(feedbackService.getAll()).thenReturn(FEEDBACK_LIST);
 
