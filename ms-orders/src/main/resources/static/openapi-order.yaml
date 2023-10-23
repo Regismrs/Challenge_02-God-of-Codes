@@ -230,13 +230,11 @@ components:
           type: string
           example: "rua exemplo"
         number:
-          type: integer
-          format: int64
-          example: 1
+          type: string
+          example: "330"
         postalCode:
-          type: integer
-          format: int64
-          example: 12345678
+          type: string
+          example: "12345678"
     paymentEnum:
       type: string
       enum:
@@ -316,9 +314,8 @@ components:
           type: string
           example: "rua exemplo"
         number:
-          type: integer
-          format: int64
-          example: 1
+          type: string
+          example: "330"
         complement:
           type: string
           example: "casa"
@@ -329,9 +326,8 @@ components:
           type: string
           example: "State exemple"
         postalCode:
-          type: integer
-          format: int64
-          example: 12345678
+          type: string
+          example: "12345678"
     productResponse:
       required:
       - productId
