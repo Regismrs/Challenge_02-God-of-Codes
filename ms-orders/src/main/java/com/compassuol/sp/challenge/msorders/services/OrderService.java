@@ -58,11 +58,6 @@ public class OrderService {
         //save
         Order saved = orderRepository.save(order);
 
-        //gambiarra
-        for (OrderProduct p: order.getProducts()) {
-            p.setOrder(order);
-        }
-
         return OrderMapper.toDto(saved);
     }
 
