@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
@@ -46,6 +48,11 @@ public class OrderController {
     @GetMapping(value = "/{id}")
     public ResponseEntity<OrderResponse> getOrder(@PathVariable("id") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(orderService.findById(id));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<OrderResponse>> getAll() {
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.getAll());
     }
 
 }

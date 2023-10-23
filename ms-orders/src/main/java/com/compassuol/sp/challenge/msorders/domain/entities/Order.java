@@ -35,8 +35,8 @@ public class Order implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    //@OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY, orphanRemoval = true)
     private List<OrderProduct> products;
 
     @Enumerated(EnumType.STRING)
@@ -84,12 +84,14 @@ public class Order implements Serializable {
     private LocalDateTime cancelDate;
 
     public void setProducts(List<OrderProduct> products) {
-        // cuz update...
         if (this.products == null) {
             this.products = new ArrayList<>();
         } else {
             this.products.clear();
        }
+        // vincula cada item do pedido a esse pedido
+        for (OrderProduct p: products) p.setOrder(this);
+
         this.products.addAll(products);
     }
 }

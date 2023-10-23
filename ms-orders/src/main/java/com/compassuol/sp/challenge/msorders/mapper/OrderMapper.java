@@ -7,6 +7,7 @@ import com.compassuol.sp.challenge.msorders.domain.entities.Order;
 import com.compassuol.sp.challenge.msorders.domain.entities.OrderProduct;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -75,5 +76,15 @@ public class OrderMapper {
                 .street(address.getStreet())
                 .build();
     }
+
+
+    public static List<OrderResponse> toListDTO(List<Order> orderList){
+        List<OrderResponse> orderResponseList = new ArrayList<>();
+        for (Order order : orderList){
+            orderResponseList.add(toDto(order));
+        }
+        return orderResponseList;
+    }
+
 
 }
