@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Getter
@@ -16,6 +17,9 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "order_product_tb")
 public class OrderProduct {
+
+    //private static final Long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,6 +27,7 @@ public class OrderProduct {
     @Column(name="product_id", nullable = false)
     private Long productId;
 
+    //@JoinColumn(name = "order_id", referencedColumnName = "id")
     @ManyToOne
     private Order order;
 
