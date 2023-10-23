@@ -28,7 +28,7 @@ import java.util.List;
 @Table(name = "order_tb")
 public class Order implements Serializable {
 
-    private static final Long serialVersionUID = 1L;
+    private static final Long serialVersionUID = 1L;    
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
