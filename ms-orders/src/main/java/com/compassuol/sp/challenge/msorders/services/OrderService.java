@@ -37,7 +37,7 @@ public class OrderService {
         this.addressService = addressService;
         this.productService = productsService;
     }
-
+    @Transactional
     public OrderResponse saveOrder(OrderRequest orderRequest) {
 
         Order order = new Order();
@@ -57,6 +57,11 @@ public class OrderService {
 
         //save
         Order saved = orderRepository.save(order);
+
+        //gambiarra
+        for (OrderProduct p: order.getProducts()) {
+            p.setOrder(order);
+        }
 
         return OrderMapper.toDto(saved);
     }
