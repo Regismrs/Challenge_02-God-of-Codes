@@ -1,11 +1,15 @@
 package com.compassuol.sp.challenge.msorders.common;
 
+import com.compassuol.sp.challenge.msorders.domain.dto.AddressRequest;
 import com.compassuol.sp.challenge.msorders.domain.dto.AddressResponse;
+import com.compassuol.sp.challenge.msorders.domain.dto.ProductRequest;
 import com.compassuol.sp.challenge.msorders.domain.dto.ProductResponse;
 import com.compassuol.sp.challenge.msorders.domain.entities.Address;
 import com.compassuol.sp.challenge.msorders.domain.entities.OrderProduct;
+import com.compassuol.sp.challenge.msorders.enums.PaymentEnum;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

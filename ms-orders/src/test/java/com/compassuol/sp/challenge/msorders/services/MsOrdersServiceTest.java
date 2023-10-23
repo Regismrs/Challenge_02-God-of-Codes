@@ -1,11 +1,15 @@
 package com.compassuol.sp.challenge.msorders.services;
 
 import com.compassuol.sp.challenge.msorders.domain.dto.OrderCancelResponse;
+import com.compassuol.sp.challenge.msorders.domain.dto.OrderRequest;
+import com.compassuol.sp.challenge.msorders.domain.dto.OrderResponse;
 import com.compassuol.sp.challenge.msorders.domain.entities.Order;
 import com.compassuol.sp.challenge.msorders.domain.entities.OrderProduct;
+import com.compassuol.sp.challenge.msorders.enums.PaymentEnum;
 import com.compassuol.sp.challenge.msorders.enums.StatusEnum;
 import com.compassuol.sp.challenge.msorders.exceptions.BusinessException;
 import com.compassuol.sp.challenge.msorders.repositories.OrderRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,11 +17,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
-import static com.compassuol.sp.challenge.msorders.common.OrderConstants.ADDRESS;
-import static com.compassuol.sp.challenge.msorders.common.OrderConstants.PRODUCTS;
+import static com.compassuol.sp.challenge.msorders.common.OrderConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -97,4 +103,20 @@ public class MsOrdersServiceTest {
         }
     }
 
+    @Test
+    void createOrderWithValidDataReturnProduct() {
+        Order order = new Order();
+        order.setProducts(PRODUCTS);
+        order.setAddress(ADDRESS);
+        order.setPaymentMethod(PaymentEnum.CREDIT_CARD);
+    }
+
+    @Test
+    void getProductsReturnsEmptyList() {
+        when(orderRepository.findAll()).thenReturn(Collections.emptyList());
+
+        List<OrderResponse> sut = orderService.getAll();
+
+        Assertions.assertThat(sut).isEmpty();
+    }
 }
