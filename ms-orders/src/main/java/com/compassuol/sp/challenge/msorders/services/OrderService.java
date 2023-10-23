@@ -12,6 +12,8 @@ import com.compassuol.sp.challenge.msorders.exceptions.NotFound;
 import com.compassuol.sp.challenge.msorders.exceptions.NotFound;
 import com.compassuol.sp.challenge.msorders.mapper.OrderMapper;
 import com.compassuol.sp.challenge.msorders.repositories.OrderRepository;
+import jakarta.persistence.Id;
+import org.aspectj.weaver.ast.Or;
 import org.bouncycastle.oer.Switch;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -59,6 +61,9 @@ public class OrderService {
         //save
         Order saved = orderRepository.save(order);
 
+        for (OrderProduct p: order.getProducts()) {
+            p.setOrder(order);
+        }
         return OrderMapper.toDto(saved);
     }
 
@@ -138,6 +143,11 @@ public class OrderService {
         }
 
         return true;
+    }
+    public OrderResponse findById(Long id) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new NotFound("Not Found Order"));
+        return OrderMapper.toDto(order);
     }
 
     public List<OrderResponse> getAll(){

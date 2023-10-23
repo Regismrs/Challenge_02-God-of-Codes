@@ -74,7 +74,7 @@ public class ProductRepositoryTest {
         Product emptyProduct = new Product();
         assertThatThrownBy(()->productRepository.save(emptyProduct)).isInstanceOf(RuntimeException.class);
     }
-
+//TODO: Teste quebrando, verificar.
     @Test
     void createProductWithInvalidDataEmptyThrowsException() {
         assertThatThrownBy(
