@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
@@ -42,6 +44,11 @@ public class OrderController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(orderService.updateOrder(id, orderDto));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<OrderResponse>> getAll() {
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.getAll());
     }
 
 }
