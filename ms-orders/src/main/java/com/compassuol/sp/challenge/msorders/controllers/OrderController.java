@@ -43,5 +43,9 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(orderService.updateOrder(id, orderDto));
     }
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<OrderResponse> getOrder(@PathVariable("id") Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.findById(id));
+    }
 
 }
