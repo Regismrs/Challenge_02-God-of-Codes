@@ -21,6 +21,7 @@ import java.math.RoundingMode;
 import java.util.Collection;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 @Service
 public class OrderService {
@@ -139,5 +140,10 @@ public class OrderService {
         return true;
     }
 
+    public List<OrderResponse> getAll(){
+        List<Order> orderList = orderRepository.findAll();
+
+        return OrderMapper.toListDTO(orderList);
+    }
 
 }
