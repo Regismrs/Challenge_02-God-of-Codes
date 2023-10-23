@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.internal.matchers.Null;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 
@@ -44,7 +43,7 @@ class ProductServiceTest {
 
     @Test
     void getProductsReturnsAllProducts() {
-        List<Product> products = new ArrayList<Product>(){
+        List<Product> products = new ArrayList<>(){
             {
                 add(PRODUCT_WITH_ID);
             }
@@ -52,8 +51,7 @@ class ProductServiceTest {
         when(productRepository.findAll()).thenReturn(products);
         List<ProductResponseDTO> sut = productService.getAll();
 
-        assertThat(sut).isNotEmpty();
-        assertThat(sut).hasSize(1);
+        assertThat(sut).isNotEmpty().hasSize(1);
 
         // comparacao campo a campo pq product <> productResponseDto
         assertThat(sut.get(0)).isInstanceOf(ProductResponseDTO.class);
@@ -110,7 +108,7 @@ class ProductServiceTest {
         assertThat(updatedProduct.getValue()).isEqualByComparingTo(BigDecimal.TEN);
     }
     @Test
-    public void updateProductWithInvalidDataThrowsException() {
+     void updateProductWithInvalidDataThrowsException() {
 
         when(productRepository.findById(1L)).thenReturn(Optional.of(PRODUCT_WITH_ID));
 
@@ -121,7 +119,7 @@ class ProductServiceTest {
         ).isInstanceOf(RuntimeException.class);
     }
     @Test
-    public void updateProductWithDuplicatedNameThrowsException() {
+    void updateProductWithDuplicatedNameThrowsException() {
         Product existingProduct = new Product();
         existingProduct.setId(1L);
         existingProduct.setName("Produto Existente");
@@ -148,11 +146,7 @@ class ProductServiceTest {
 
         ProductResponseDTO sut = productService.findById(1L);
 
-        assertThat(sut).isNotNull();
-        assertThat(sut).isInstanceOf(ProductResponseDTO.class);
-        assertThat(sut)
-                .usingRecursiveComparison()
-                .isEqualTo(PRODUCT_WITH_ID);
+        assertThat(sut).isNotNull().isInstanceOf(ProductResponseDTO.class).usingRecursiveComparison().isEqualTo(PRODUCT_WITH_ID);
     }
 
     @Test
@@ -162,4 +156,5 @@ class ProductServiceTest {
         assertThatThrownBy(() -> productService.findById(1L))
                 .isInstanceOf(NotFound.class);
     }
+
 }

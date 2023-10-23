@@ -1,6 +1,6 @@
 package com.compassuol.sp.challenge.msorders.domain.dto;
 
-public record AddressViaCepDto(
+public record AddressViaCep(
         String cep,
         String logradouro,
         String bairro,

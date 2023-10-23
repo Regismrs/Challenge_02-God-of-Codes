@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static com.compassuol.sp.challenge.msproducts.commom.ProductConstants.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -137,4 +136,5 @@ class ProductControllerTest {
         assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(sut.getBody()).isEqualTo(PRODUCT_RES_DTO1);
     }
+
 }

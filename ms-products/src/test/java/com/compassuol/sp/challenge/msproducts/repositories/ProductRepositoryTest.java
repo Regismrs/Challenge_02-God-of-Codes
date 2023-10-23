@@ -20,8 +20,6 @@ import java.util.Optional;
 
 import static com.compassuol.sp.challenge.msproducts.commom.ProductConstants.*;
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 
 @ActiveProfiles("test")
 @DataJpaTest
@@ -57,9 +55,7 @@ public class ProductRepositoryTest {
 
     @Test
     void getAllProductsReturnsEmptyList() {
-        assertThatCode(() -> {
-            productRepository.findAll();
-        }).doesNotThrowAnyException();
+        assertThatCode(() -> productRepository.findAll()).doesNotThrowAnyException();
 
         List<Product> sut = productRepository.findAll();
         assertThat(sut).isEmpty();
@@ -70,19 +66,17 @@ public class ProductRepositoryTest {
         Product product = productRepository.save(PRODUCT);
         Product sut = testEntityManager.find(Product.class, product.getId());
 
-        assertThat(sut).isNotNull();
-        assertThat(sut)
-                .isEqualToComparingFieldByFieldRecursively(product);
+        assertThat(sut).isNotNull().isEqualToComparingFieldByFieldRecursively(product);
     }
 
     @Test
-    public void createProductWithInvalidDataNullThrowsException() {
+    void createProductWithInvalidDataNullThrowsException() {
         Product emptyProduct = new Product();
         assertThatThrownBy(()->productRepository.save(emptyProduct)).isInstanceOf(RuntimeException.class);
     }
-
+//TODO: Teste quebrando, verificar.
     @Test
-    public void createProductWithInvalidDataEmptyThrowsException() {
+    void createProductWithInvalidDataEmptyThrowsException() {
         assertThatThrownBy(
                 ()->productRepository.save(EMPTY_PRODUCT)
         ).isInstanceOf(RuntimeException.class);
@@ -100,7 +94,7 @@ public class ProductRepositoryTest {
     }
 
     @Test
-    public void updateProductWithValidDataReturnsProduct(){
+    void updateProductWithValidDataReturnsProduct(){
         Product originalProduct = PRODUCT;
         productRepository.save(originalProduct);
 
@@ -120,19 +114,19 @@ public class ProductRepositoryTest {
     }
 
     @Test
-    public void updateProductWithInvalidDataNullThrowsException() {
+    void updateProductWithInvalidDataNullThrowsException() {
         assertThatThrownBy(() -> productRepository.save(EMPTY_PRODUCT_WITH_ID)).isInstanceOf(ConstraintViolationException.class);
     }
 
     @Test
-    public void updateProductWithInvalidDataEmptyThrowsException() {
+    void updateProductWithInvalidDataEmptyThrowsException() {
         assertThatThrownBy(
                 () -> productRepository.save(EMPTY_PRODUCT_WITH_ID)
         ).isInstanceOf(ConstraintViolationException.class);
     }
 
     @Test
-    public void updateProductWithDuplicateNameThrowsException() {
+    void updateProductWithDuplicateNameThrowsException() {
         Product originalProduct = new Product("Produto Original", "Descrição Original", BigDecimal.valueOf(1.0));
         productRepository.save(originalProduct);
 
@@ -143,4 +137,12 @@ public class ProductRepositoryTest {
                 .isInstanceOf(DataIntegrityViolationException.class);
     }
 
+    @Test
+    void deleteProductWithExistentIdReturnsEmpty() {
+        productRepository.deleteById(PRODUCT_WITH_ID.getId());
+
+        Optional<Product> deletedProduct = productRepository.findById(PRODUCT_WITH_ID.getId());
+
+        assertThat(deletedProduct).isEmpty();
+    }
 }

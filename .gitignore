@@ -21,6 +21,7 @@ target/
 *:Zone.Identifier
 
 ### NetBeans ###
+/data
 /nbproject/private/
 /nbbuild/
 /dist/

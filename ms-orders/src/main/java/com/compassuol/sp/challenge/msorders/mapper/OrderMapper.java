@@ -2,52 +2,24 @@ package com.compassuol.sp.challenge.msorders.mapper;
 
 
 import com.compassuol.sp.challenge.msorders.domain.dto.*;
-import com.compassuol.sp.challenge.msorders.domain.entities.OrderProduct;
+import com.compassuol.sp.challenge.msorders.domain.entities.Address;
 import com.compassuol.sp.challenge.msorders.domain.entities.Order;
+import com.compassuol.sp.challenge.msorders.domain.entities.OrderProduct;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class OrderMapper {
 
-    public static Order toModel(OrderRequestDto orderDto){
+    public static OrderResponse toDto(Order order){
 
-        List<OrderProduct> products =
-                orderDto.getOrderProducts().stream()
-                        .map(p -> new OrderProduct(p.getProductId(), p.getQuantity())).toList();
-
-        Order order = new Order();
-        order.setProducts(products);
-        order.setNumber(orderDto.getAddressRequestDto().getNumber());
-        order.setPostalCode(orderDto.getAddressRequestDto().getPostalCode());
-        order.setPaymentMethod(orderDto.getPaymentMethod());
-        return order;
-    }
-
-    //metodo funcionando igual ao ms-products
-    public static OrderResponseDto toDto(Order order, AddressViaCepDto addressViaCepDto){
-
-        List<ProductRequestDto> products =
-                order.getProducts().stream()
-                        .map(p -> new ProductRequestDto(p.getProductId(), p.getQuantity())).toList();
-
-        var addressResponseMapper = new AddressResponseDto()
-                .builder()
-                .street(addressViaCepDto.logradouro())
-                .number(order.getNumber())
-                .complement(addressViaCepDto.bairro())
-                .city(addressViaCepDto.localidade())
-                .state(addressViaCepDto.uf())
-                .postalCode(addressViaCepDto.cep())
-                .build();
-
-        return new OrderResponseDto()
+        return OrderResponse
                 .builder()
                 .id(order.getId())
-                .products(products)
-                .addressResponseDto(addressResponseMapper)
+                .products( orderProductsToProductsResponse(order.getProducts()) )
+                .addressResponse( addressToDto(order.getAddress()) )
                 .paymentMethod(order.getPaymentMethod())
                 .subtotalValue(order.getSubTotalValue())
                 .discount(order.getDiscount())
@@ -57,21 +29,62 @@ public class OrderMapper {
                 .build();
     }
 
+    public static OrderCancelResponse toCancelDto(Order order){
 
-    //rever
-    public OrderResponseDto orderList(Order order){
-        var orderResponseDtoList = order.getProducts().stream()
-                .map(this::orderResponseDto1).collect(Collectors.toList());
-        return (OrderResponseDto) orderResponseDtoList;
+        return OrderCancelResponse
+                .builder()
+                .id(order.getId())
+                .products( orderProductsToProductsResponse(order.getProducts()) )
+                .addressResponse( addressToDto(order.getAddress()) )
+                .paymentMethod(order.getPaymentMethod())
+                .subtotalValue(order.getSubTotalValue())
+                .discount(order.getDiscount())
+                .totalValue(order.getTotalValue())
+                .createdDate(order.getCreatedDate())
+                .status(order.getStatus())
+                .cancelReason(order.getCancelReason())
+                .cancelDate(order.getCancelDate())
+                .build();
+    }
+    public static OrderProduct requestPlusProductMicroserviceToModel(
+                ProductRequest request,
+                ProductMicroservice productMicroservice) {
+
+        OrderProduct product = new OrderProduct();
+        product.setProductId(request.getProductId());
+        product.setQuantity(request.getQuantity());
+        product.setValue(productMicroservice.getValue());
+        return product;
     }
 
-    //rever
-    private OrderResponseDto orderResponseDto1(OrderProduct productResponseDto){
+    private static List<ProductResponse> orderProductsToProductsResponse(
+            List<OrderProduct> orderProducts) {
 
-        var orderResponse = new OrderResponseDto();
-
-        orderResponse.setId(productResponseDto.getId());
-        return orderResponse;
+        return orderProducts.stream().map(
+                p -> new ProductResponse(p.getProductId(), p.getQuantity())
+        ).toList();
     }
+
+    private static AddressResponse addressToDto(Address address) {
+        return AddressResponse
+                .builder()
+                .state(address.getState())
+                .city(address.getCity())
+                .number(address.getNumber())
+                .complement(address.getComplement())
+                .postalCode(address.getPostalCode())
+                .street(address.getStreet())
+                .build();
+    }
+
+
+    public static List<OrderResponse> toListDTO(List<Order> orderList){
+        List<OrderResponse> orderResponseList = new ArrayList<>();
+        for (Order order : orderList){
+            orderResponseList.add(toDto(order));
+        }
+        return orderResponseList;
+    }
+
 
 }
